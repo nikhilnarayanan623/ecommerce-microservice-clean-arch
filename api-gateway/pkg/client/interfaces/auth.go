@@ -7,5 +7,5 @@ import (
 )
 
 type AuthClient interface {
-	UserSignup(ctx context.Context, req domain.UserSignupRequest) (userId uint64, err error)
+	UserSignup(ctx context.Context, req domain.UserSignupRequest) (userID uint64, err error)
 }
