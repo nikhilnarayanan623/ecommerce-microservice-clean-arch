@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "./pkg/pb";
+
+
+service UserService {
+    rpc SaveUser(SaveUserRequest) returns (SaveUserResponse) {};
+    rpc FindUserByEmail(FindUserByEmailRequest) returns (FindUserByEmailResponse) {};
+}
+
+message SaveUserRequest {
+    string first_name = 1;
+    string last_name = 2;
+    uint64 age = 3;
+    string user_name = 4;
+    string email = 5;
+    string phone = 6;
+    string password = 7;
+
+}
+
+message SaveUserResponse{
+    uint64 user_id = 1;
+}
+
+message FindUserByEmailRequest {
+    string email = 1;
+}
+
+message FindUserByEmailResponse {
+    uint64 user_id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    uint64 age = 4;
+    string user_name = 5;
+    string email = 6;
+    string phone = 7;
+    string password = 8;
+}
