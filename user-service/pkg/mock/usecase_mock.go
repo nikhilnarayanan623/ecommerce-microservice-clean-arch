@@ -65,6 +65,21 @@ func (mr *MockUserUsecaseMockRecorder) FindUserByID(ctx, userID interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUserByID", reflect.TypeOf((*MockUserUsecase)(nil).FindUserByID), ctx, userID)
 }
 
+// FindUserByPhone mocks base method.
+func (m *MockUserUsecase) FindUserByPhone(ctx context.Context, phone string) (domain.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindUserByPhone", ctx, phone)
+	ret0, _ := ret[0].(domain.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindUserByPhone indicates an expected call of FindUserByPhone.
+func (mr *MockUserUsecaseMockRecorder) FindUserByPhone(ctx, phone interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUserByPhone", reflect.TypeOf((*MockUserUsecase)(nil).FindUserByPhone), ctx, phone)
+}
+
 // SaveUser mocks base method.
 func (m *MockUserUsecase) SaveUser(ctx context.Context, user domain.User) (uint64, error) {
 	m.ctrl.T.Helper()

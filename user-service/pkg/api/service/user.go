@@ -45,11 +45,30 @@ func (c *UserServiceServer) FindUserByEmail(ctx context.Context, req *pb.FindUse
 	log.Println("find user by email called")
 	user, err := c.usecase.FindUserByEmail(ctx, req.GetEmail())
 	if err != nil {
-		log.Println("failed to find user by email")
-		return nil, status.Errorf(codes.Internal, "%s", err.Error())
+		return nil, status.Errorf(codes.InvalidArgument, "%s", err.Error())
 	}
 
 	return &pb.FindUserByEmailResponse{
+		UserId:      user.ID,
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
+		Age:         user.Age,
+		Phone:       user.Phone,
+		Email:       user.Email,
+		Password:    user.Password,
+		Verified:    user.Verified,
+		BlockStatus: user.BlockStatus,
+	}, nil
+}
+
+func (c *UserServiceServer) FindUserByPhone(ctx context.Context, req *pb.FindUserByPhoneRequest) (*pb.FindUserByPhoneResponse, error) {
+	log.Println("find user by phone called")
+
+	user, err := c.usecase.FindUserByPhone(ctx, req.GetPhone())
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "%s", err.Error())
+	}
+	return &pb.FindUserByPhoneResponse{
 		UserId:      user.ID,
 		FirstName:   user.FirstName,
 		LastName:    user.LastName,

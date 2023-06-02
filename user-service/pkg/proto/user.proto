@@ -9,6 +9,7 @@ import "google/protobuf/empty.proto";
 service UserService {
     rpc SaveUser(SaveUserRequest) returns (SaveUserResponse) {};
     rpc FindUserByEmail(FindUserByEmailRequest) returns (FindUserByEmailResponse) {};
+    rpc FindUserByPhone(FindUserByPhoneRequest) returns (FindUserByPhoneResponse){};
     rpc UpdateUserVerified(UpdateUserVerifyRequest) returns(google.protobuf.Empty){};
 }
 
@@ -48,3 +49,19 @@ message UpdateUserVerifyRequest {
     uint64 user_id = 1;
 }
 
+
+// find user by phone
+message FindUserByPhoneRequest {
+    string phone = 1;
+}
+message FindUserByPhoneResponse {
+    uint64 user_id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    uint64 age = 4;
+    string email = 5;
+    string phone = 6;
+    string password = 7;
+    bool verified = 8;
+    bool block_status = 9;
+}
