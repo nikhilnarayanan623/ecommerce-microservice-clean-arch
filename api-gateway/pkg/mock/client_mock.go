@@ -36,6 +36,26 @@ func (m *MockAuthServiceClient) EXPECT() *MockAuthServiceClientMockRecorder {
 	return m.recorder
 }
 
+// RefreshAccessToken mocks base method.
+func (m *MockAuthServiceClient) RefreshAccessToken(ctx context.Context, in *pb.RefreshAccessTokenRequest, opts ...grpc.CallOption) (*pb.RefreshAccessTokenResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "RefreshAccessToken", varargs...)
+	ret0, _ := ret[0].(*pb.RefreshAccessTokenResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RefreshAccessToken indicates an expected call of RefreshAccessToken.
+func (mr *MockAuthServiceClientMockRecorder) RefreshAccessToken(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RefreshAccessToken", reflect.TypeOf((*MockAuthServiceClient)(nil).RefreshAccessToken), varargs...)
+}
+
 // UserSignup mocks base method.
 func (m *MockAuthServiceClient) UserSignup(ctx context.Context, in *pb.UserSignupRequest, opts ...grpc.CallOption) (*pb.UserSignupResponse, error) {
 	m.ctrl.T.Helper()
@@ -97,6 +117,21 @@ func NewMockAuthServiceServer(ctrl *gomock.Controller) *MockAuthServiceServer {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockAuthServiceServer) EXPECT() *MockAuthServiceServerMockRecorder {
 	return m.recorder
+}
+
+// RefreshAccessToken mocks base method.
+func (m *MockAuthServiceServer) RefreshAccessToken(arg0 context.Context, arg1 *pb.RefreshAccessTokenRequest) (*pb.RefreshAccessTokenResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RefreshAccessToken", arg0, arg1)
+	ret0, _ := ret[0].(*pb.RefreshAccessTokenResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RefreshAccessToken indicates an expected call of RefreshAccessToken.
+func (mr *MockAuthServiceServerMockRecorder) RefreshAccessToken(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RefreshAccessToken", reflect.TypeOf((*MockAuthServiceServer)(nil).RefreshAccessToken), arg0, arg1)
 }
 
 // UserSignup mocks base method.

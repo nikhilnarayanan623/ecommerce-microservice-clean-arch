@@ -60,3 +60,16 @@ func (c *authClient) UserSignupVerify(ctx context.Context, otpVerify utils.OtpVe
 		RefreshToken: res.GetRefreshToken(),
 	}, nil
 }
+
+// Refresh access token for user using refresh token
+func (c *authClient) RefreshAccesstokenForUser(ctx context.Context, refreshToken string) (accessToken string, err error) {
+
+	res, err := c.client.RefreshAccessToken(ctx, &pb.RefreshAccessTokenRequest{
+		UsedFor:      pb.RefreshAccessTokenRequest_User,
+		RefreshToken: refreshToken,
+	})
+	if err != nil {
+		return "", err
+	}
+	return res.GetAccessToken(), nil
+}
