@@ -38,12 +38,19 @@ func (c *userDatabase) FindUserByEmail(ctx context.Context, email string) (user 
 
 // Save a new user
 func (c *userDatabase) SaveUser(ctx context.Context, user domain.User) (userID uint64, err error) {
-	query := `INSERT INTO users (user_name, first_name, last_name, age, email, phone, password,created_at) 
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`
+	query := `INSERT INTO users ( first_name, last_name, age, email, phone, password,created_at) 
+	VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`
 
 	createdAt := time.Now()
-	err = c.db.Raw(query, user.UserName, user.FirstName, user.LastName,
+	err = c.db.Raw(query, user.FirstName, user.LastName,
 		user.Age, user.Email, user.Phone, user.Password, createdAt).Scan(&user).Error
 
 	return userID, err
+}
+
+func (c *userDatabase) UpdateUserVerified(ctx context.Context, userID uint64) error {
+	query := `UPDATE users SET verified = 'T' WHERE id = $1`
+	err := c.db.Exec(query, userID).Error
+
+	return err
 }

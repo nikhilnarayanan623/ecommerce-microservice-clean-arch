@@ -7,7 +7,6 @@ type User struct {
 	FirstName   string    `json:"first_name" gorm:"not null" binding:"required,min=2,max=50"`
 	LastName    string    `json:"last_name" gorm:"not null" binding:"required,min=1,max=50"`
 	Age         uint64    `json:"age" binding:"required,numeric"`
-	UserName    string    `json:"user_name" gorm:"not null;unique" binding:"required,min=3,max=15"`
 	Email       string    `json:"email" gorm:"unique;not null" binding:"required,email"`
 	Phone       string    `json:"phone" gorm:"unique" binding:"required,min=10,max=10"`
 	Password    string    `json:"password" binding:"required"`

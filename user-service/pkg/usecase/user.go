@@ -19,11 +19,17 @@ func NewUserUsecase(repo repo.UserRepository) interfaces.UserUsecase {
 }
 
 func (c *userUsecase) SaveUser(ctx context.Context, user domain.User) (userID uint64, err error) {
+
 	return c.repo.SaveUser(ctx, user)
 }
+
 func (c *userUsecase) FindUserByEmail(ctx context.Context, email string) (domain.User, error) {
 	return c.repo.FindUserByEmail(ctx, email)
 }
 func (c *userUsecase) FindUserByID(ctx context.Context, userID uint64) (domain.User, error) {
 	return c.repo.FindUserByUserID(ctx, userID)
+}
+
+func (c *userUsecase) UpdateUserVerified(ctx context.Context, userID uint64) error {
+	return c.repo.UpdateUserVerified(ctx, userID)
 }
