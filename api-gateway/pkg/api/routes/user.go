@@ -15,6 +15,8 @@ func SetupUserRoutes(router *gin.Engine, authHandler handler.AuthHandler, userHa
 			signup.POST("/verify", authHandler.UserSignupVerify)
 
 		}
+
+		auth.POST("/refresh-token", authHandler.RefreshAccesstokenForUser)
 	}
 
 }

@@ -70,3 +70,24 @@ func (c *authHandler) UserSignupVerify(ctx *gin.Context) {
 	response := utils.SuccessResponse("successfully otp verified ", tokenRes)
 	ctx.JSON(http.StatusOK, response)
 }
+
+func (c *authHandler) RefreshAccesstokenForUser(ctx *gin.Context) {
+
+	var body utils.RefreshTokenRequest
+
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		response := utils.ErrorResponse("failed to bind inputs", err.Error(), body)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	accessToken, err := c.client.RefreshAccesstokenForUser(ctx, body.RefreshToken)
+	if err != nil {
+		response := utils.ErrorResponse("failed to refresh access token", err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := utils.SuccessResponse("successfully access_token generated", accessToken)
+	ctx.JSON(http.StatusOK, response)
+}
