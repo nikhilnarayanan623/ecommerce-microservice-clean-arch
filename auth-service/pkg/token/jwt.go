@@ -8,8 +8,8 @@ import (
 )
 
 type jwtClaims struct {
-	tokenID string
-	userID  uint64
+	TokenID string
+	UserID  uint64
 	jwt.RegisteredClaims
 }
 
@@ -35,8 +35,8 @@ func (c *jwtAuth) GenerateToken(req TokenRequest) (string, error) {
 	}
 
 	claims := &jwtClaims{
-		tokenID: req.TokenID,
-		userID:  req.UserID,
+		TokenID: req.TokenID,
+		UserID:  req.UserID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(req.ExpirationDate),
 		},
@@ -57,7 +57,7 @@ func (c *jwtAuth) VerifyToken(req TokenVerifyRequest) (TokenVerifyResponse, erro
 		return TokenVerifyResponse{}, fmt.Errorf("invalid user type")
 	}
 
-	token, err := jwt.ParseWithClaims(req.tokenString, &jwtClaims{}, func(t *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(req.TokenString, &jwtClaims{}, func(t *jwt.Token) (interface{}, error) {
 
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("invalid signing method on token")
@@ -78,6 +78,7 @@ func (c *jwtAuth) VerifyToken(req TokenVerifyRequest) (TokenVerifyResponse, erro
 	}
 
 	return TokenVerifyResponse{
-		UserID: claims.userID,
+		TokenID: claims.TokenID,
+		UserID:  claims.UserID,
 	}, nil
 }

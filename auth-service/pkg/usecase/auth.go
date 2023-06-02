@@ -21,6 +21,10 @@ type authUsecase struct {
 	tokenAuth  token.TokenAuth
 }
 
+const (
+	accessTokenDuration = time.Minute * 20
+)
+
 func NewAuthUsecase(repo repo.AuthRepository, userClient client.UserClient,
 	otpVerify otp.OtpVerification, tokenAuth token.TokenAuth) interfaces.AuthUseCase {
 	return &authUsecase{
@@ -47,6 +51,7 @@ func (c *authUsecase) UserSignup(ctx context.Context, user domain.SaveUserReques
 	// if user not exist then save the user
 	if userID == 0 {
 		userID, err = c.userClient.SaveUser(ctx, user)
+		fmt.Println("user_id=0:", userID)
 		if err != nil {
 			return "", fmt.Errorf("failed to save user \nerror%s", err.Error())
 		}
@@ -102,7 +107,7 @@ func (c *authUsecase) GenerateAccessToken(ctx context.Context, userID uint64) (a
 		TokenID:        "no_id",
 		UserID:         userID,
 		UsedFor:        token.User,
-		ExpirationDate: time.Now().Add(time.Minute * 20),
+		ExpirationDate: time.Now().Add(accessTokenDuration),
 	})
 	return
 }
@@ -134,4 +139,42 @@ func (c *authUsecase) GenereateRefreshToken(ctx context.Context, userID uint64) 
 	}
 
 	return refreshToken, nil
+}
+
+// Refresh AccessToken
+func (c *authUsecase) RefreshAccessToken(ctx context.Context, refreshToken string, tokenUser token.UserType) (accessToken string, err error) {
+
+	tokenRes, err := c.tokenAuth.VerifyToken(token.TokenVerifyRequest{
+		UsedFor:     tokenUser,
+		TokenString: refreshToken,
+	})
+	if err != nil {
+		return "", fmt.Errorf("failed to verify refresh token \nerror:%s", err.Error())
+	}
+
+	session, err := c.repo.FindRefreshSessionByTokenID(ctx, tokenRes.TokenID)
+	if err != nil {
+		return "", fmt.Errorf("failed to get refresh session \nerror:%s", err.Error())
+	}
+
+	if session.TokenID == "" {
+		return "", fmt.Errorf("session not found for the refresh token")
+	}
+
+	if session.IsBlocked {
+		return "", fmt.Errorf("refresh token blocked in session")
+	}
+	fmt.Println(session.ExpireAt)
+	if time.Since(session.ExpireAt) > 0 {
+		return "", fmt.Errorf("refresh token expired")
+	}
+
+	accessToken, err = c.tokenAuth.GenerateToken(token.TokenRequest{
+		TokenID:        "no_id",
+		UserID:         session.UserID,
+		UsedFor:        tokenUser,
+		ExpirationDate: time.Now().Add(accessTokenDuration),
+	})
+
+	return
 }
