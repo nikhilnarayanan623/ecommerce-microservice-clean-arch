@@ -9,7 +9,7 @@ import (
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/domain"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/mock"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/pb"
-	"github.com/stretchr/testify/assert"	
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUserSignup(t *testing.T) {
@@ -17,7 +17,7 @@ func TestUserSignup(t *testing.T) {
 	testCases := map[string]struct {
 		input          domain.UserSignupRequest
 		buildStub      func(mClient *mock.MockAuthServiceClient)
-		expectedOutput uint64
+		expectedOutput string
 		expectedError  error
 	}{
 		"ServerErrorShouldReturnAsError": {
@@ -31,7 +31,7 @@ func TestUserSignup(t *testing.T) {
 					LastName:  "N",
 				}).Times(1).Return(&pb.UserSignupResponse{}, errors.New("failed by server"))
 			},
-			expectedOutput: 0,
+			expectedOutput: "",
 			expectedError:  errors.New("failed by server"),
 		},
 		"SucessfulOnServerSideShouldReturnUserID": {
@@ -43,9 +43,9 @@ func TestUserSignup(t *testing.T) {
 				mClient.EXPECT().UserSignup(gomock.Any(), &pb.UserSignupRequest{
 					FirstName: "Nikhil",
 					LastName:  "N",
-				}).Times(1).Return(&pb.UserSignupResponse{UserId: 8}, nil)
+				}).Times(1).Return(&pb.UserSignupResponse{OtpId: "otp_id"}, nil)
 			},
-			expectedOutput: 8,
+			expectedOutput: "otp_id",
 			expectedError:  nil,
 		},
 	}

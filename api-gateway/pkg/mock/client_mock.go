@@ -56,6 +56,26 @@ func (mr *MockAuthServiceClientMockRecorder) UserSignup(ctx, in interface{}, opt
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserSignup", reflect.TypeOf((*MockAuthServiceClient)(nil).UserSignup), varargs...)
 }
 
+// UserSignupVerify mocks base method.
+func (m *MockAuthServiceClient) UserSignupVerify(ctx context.Context, in *pb.UserSignupVerifyRequest, opts ...grpc.CallOption) (*pb.UserSignupVerifyResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "UserSignupVerify", varargs...)
+	ret0, _ := ret[0].(*pb.UserSignupVerifyResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserSignupVerify indicates an expected call of UserSignupVerify.
+func (mr *MockAuthServiceClientMockRecorder) UserSignupVerify(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserSignupVerify", reflect.TypeOf((*MockAuthServiceClient)(nil).UserSignupVerify), varargs...)
+}
+
 // MockAuthServiceServer is a mock of AuthServiceServer interface.
 type MockAuthServiceServer struct {
 	ctrl     *gomock.Controller
@@ -92,6 +112,21 @@ func (m *MockAuthServiceServer) UserSignup(arg0 context.Context, arg1 *pb.UserSi
 func (mr *MockAuthServiceServerMockRecorder) UserSignup(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserSignup", reflect.TypeOf((*MockAuthServiceServer)(nil).UserSignup), arg0, arg1)
+}
+
+// UserSignupVerify mocks base method.
+func (m *MockAuthServiceServer) UserSignupVerify(arg0 context.Context, arg1 *pb.UserSignupVerifyRequest) (*pb.UserSignupVerifyResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserSignupVerify", arg0, arg1)
+	ret0, _ := ret[0].(*pb.UserSignupVerifyResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserSignupVerify indicates an expected call of UserSignupVerify.
+func (mr *MockAuthServiceServerMockRecorder) UserSignupVerify(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserSignupVerify", reflect.TypeOf((*MockAuthServiceServer)(nil).UserSignupVerify), arg0, arg1)
 }
 
 // mustEmbedUnimplementedAuthServiceServer mocks base method.

@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_UserSignup_FullMethodName = "/pb.AuthService/UserSignup"
+	AuthService_UserSignup_FullMethodName       = "/pb.AuthService/UserSignup"
+	AuthService_UserSignupVerify_FullMethodName = "/pb.AuthService/UserSignupVerify"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
 	UserSignup(ctx context.Context, in *UserSignupRequest, opts ...grpc.CallOption) (*UserSignupResponse, error)
+	UserSignupVerify(ctx context.Context, in *UserSignupVerifyRequest, opts ...grpc.CallOption) (*UserSignupVerifyResponse, error)
 }
 
 type authServiceClient struct {
@@ -46,11 +48,21 @@ func (c *authServiceClient) UserSignup(ctx context.Context, in *UserSignupReques
 	return out, nil
 }
 
+func (c *authServiceClient) UserSignupVerify(ctx context.Context, in *UserSignupVerifyRequest, opts ...grpc.CallOption) (*UserSignupVerifyResponse, error) {
+	out := new(UserSignupVerifyResponse)
+	err := c.cc.Invoke(ctx, AuthService_UserSignupVerify_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
 type AuthServiceServer interface {
 	UserSignup(context.Context, *UserSignupRequest) (*UserSignupResponse, error)
+	UserSignupVerify(context.Context, *UserSignupVerifyRequest) (*UserSignupVerifyResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -60,6 +72,9 @@ type UnimplementedAuthServiceServer struct {
 
 func (UnimplementedAuthServiceServer) UserSignup(context.Context, *UserSignupRequest) (*UserSignupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserSignup not implemented")
+}
+func (UnimplementedAuthServiceServer) UserSignupVerify(context.Context, *UserSignupVerifyRequest) (*UserSignupVerifyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserSignupVerify not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -92,6 +107,24 @@ func _AuthService_UserSignup_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_UserSignupVerify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserSignupVerifyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).UserSignupVerify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_UserSignupVerify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).UserSignupVerify(ctx, req.(*UserSignupVerifyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +135,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserSignup",
 			Handler:    _AuthService_UserSignup_Handler,
+		},
+		{
+			MethodName: "UserSignupVerify",
+			Handler:    _AuthService_UserSignupVerify_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
