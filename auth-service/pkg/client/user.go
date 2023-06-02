@@ -53,6 +53,28 @@ func (c *userClient) FindUserByEmail(ctx context.Context, email string) (domain.
 	}, nil
 }
 
+func (c *userClient) FindUserByPhone(ctx context.Context, phone string) (domain.User, error) {
+
+	res, err := c.client.FindUserByPhone(ctx, &pb.FindUserByPhoneRequest{
+		Phone: phone,
+	})
+	if err != nil {
+		return domain.User{}, err
+	}
+	
+	return domain.User{
+		ID:          res.GetUserId(),
+		FirstName:   res.GetFirstName(),
+		LastName:    res.GetLastName(),
+		Age:         res.GetAge(),
+		Email:       res.GetEmail(),
+		Phone:       res.GetPhone(),
+		Password:    res.GetPassword(),
+		Verified:    res.GetVerified(),
+		BlockStatus: res.GetBlockStatus(),
+	}, nil
+}
+
 func (c *userClient) SaveUser(ctx context.Context, user domain.SaveUserRequest) (userID uint64, err error) {
 	res, err := c.client.SaveUser(ctx, &pb.SaveUserRequest{
 		FirstName: user.FirstName,

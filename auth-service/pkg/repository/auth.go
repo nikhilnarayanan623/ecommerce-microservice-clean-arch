@@ -19,6 +19,23 @@ func NewAuthRepository(db *gorm.DB) interfaces.AuthRepository {
 	}
 }
 
+func (c *authDatabase) Transactions(trxFunc func(repo interfaces.AuthRepository) error) error {
+
+	trx := c.db.Begin()
+
+	repo := NewAuthRepository(trx)
+	err := trxFunc(repo)
+
+	if err != nil {
+		return err
+	}
+
+	if err := trx.Commit().Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *authDatabase) SaveRefreshSession(ctx context.Context, refreshSession domain.RefreshSession) error {
 	query := `INSERT INTO refresh_sessions (token_id, user_id, refresh_token, expire_at) 
 	VALUES ($1, $2, $3, $4)`
@@ -35,7 +52,7 @@ func (c *authDatabase) FindRefreshSessionByTokenID(ctx context.Context, tokenID 
 	return
 }
 
-func (c *authDatabase) SaveOtpSession(ctx context.Context, otpSession domain.OTPSession) error {
+func (c *authDatabase) SaveOtpSession(ctx context.Context, otpSession domain.OtpSession) error {
 
 	query := `INSERT INTO otp_sessions (otp_id, user_id, phone ,expire_at) 
 	VALUES ($1, $2, $3, $4)`
@@ -43,10 +60,18 @@ func (c *authDatabase) SaveOtpSession(ctx context.Context, otpSession domain.OTP
 
 	return err
 }
-func (c *authDatabase) FindOtpSession(ctx context.Context, OTPID string) (otpSession domain.OTPSession, err error) {
+func (c *authDatabase) FindOtpSession(ctx context.Context, otpID string) (otpSession domain.OtpSession, err error) {
 
 	query := `SELECT * FROM otp_sessions WHERE otp_id = $1`
-	err = c.db.Raw(query, OTPID).Scan(&otpSession).Error
+	err = c.db.Raw(query, otpID).Scan(&otpSession).Error
 
 	return otpSession, err
+}
+
+func (c *authDatabase) DeleteAllOtpSessionsByUserID(ctx context.Context, userID uint64) error {
+
+	query := `DELETE FROM otp_sessions WHERE user_id = $1`
+	err := c.db.Exec(query, userID).Error
+
+	return err
 }

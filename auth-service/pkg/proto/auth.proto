@@ -7,6 +7,7 @@ option go_package = "./pkg/pb";
 
 service AuthService {
     rpc UserSignup(UserSignupRequest) returns (UserSignupResponse){};
+    rpc UserLogin(UserLoginRequest) returns (UserLoginResponse){};
     rpc UserSignupVerify(UserSignupVerifyRequest) returns (UserSignupVerifyResponse){}
     rpc RefreshAccessToken(RefreshAccessTokenRequest) returns (RefreshAccessTokenResponse) {}
 }
@@ -31,7 +32,7 @@ message UserSignupVerifyRequest {
     string otp_code = 2;
 }
 message UserSignupVerifyResponse {
-    string acces_token = 1;
+    string access_token = 1;
     string refresh_token = 2;
 }
 
@@ -46,4 +47,16 @@ message RefreshAccessTokenRequest {
 }
 message RefreshAccessTokenResponse{
     string access_token = 1;
+}
+
+// user login
+message UserLoginRequest {
+    string email = 1;
+    string phone = 2;
+    string password = 3;
+}
+
+message UserLoginResponse {
+    string access_token = 1;
+    string refresh_token = 2;
 }

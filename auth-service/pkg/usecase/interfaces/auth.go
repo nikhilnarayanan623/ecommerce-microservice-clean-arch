@@ -11,6 +11,9 @@ import (
 type AuthUseCase interface {
 	UserSignup(ctx context.Context, user domain.SaveUserRequest) (otpID string, err error)
 	OtpVerify(ctx context.Context, otpDetails utils.OtpVerify) (userID uint64, err error)
+
+	UserLogin(ctx context.Context, loginDetail domain.UserLoginRequest) (userID uint64, err error)
+
 	GenerateAccessToken(ctx context.Context, userID uint64, tokenUser token.UserType) (accessToken string, err error)
 	GenereateRefreshToken(ctx context.Context, userID uint64, tokenUser token.UserType) (refreshToken string, err error)
 
