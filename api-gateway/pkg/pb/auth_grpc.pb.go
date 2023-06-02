@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	AuthService_UserSignup_FullMethodName         = "/pb.AuthService/UserSignup"
 	AuthService_UserSignupVerify_FullMethodName   = "/pb.AuthService/UserSignupVerify"
+	AuthService_UserLogin_FullMethodName          = "/pb.AuthService/UserLogin"
 	AuthService_RefreshAccessToken_FullMethodName = "/pb.AuthService/RefreshAccessToken"
 )
 
@@ -30,6 +31,7 @@ const (
 type AuthServiceClient interface {
 	UserSignup(ctx context.Context, in *UserSignupRequest, opts ...grpc.CallOption) (*UserSignupResponse, error)
 	UserSignupVerify(ctx context.Context, in *UserSignupVerifyRequest, opts ...grpc.CallOption) (*UserSignupVerifyResponse, error)
+	UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginResponse, error)
 	RefreshAccessToken(ctx context.Context, in *RefreshAccessTokenRequest, opts ...grpc.CallOption) (*RefreshAccessTokenResponse, error)
 }
 
@@ -59,6 +61,15 @@ func (c *authServiceClient) UserSignupVerify(ctx context.Context, in *UserSignup
 	return out, nil
 }
 
+func (c *authServiceClient) UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginResponse, error) {
+	out := new(UserLoginResponse)
+	err := c.cc.Invoke(ctx, AuthService_UserLogin_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) RefreshAccessToken(ctx context.Context, in *RefreshAccessTokenRequest, opts ...grpc.CallOption) (*RefreshAccessTokenResponse, error) {
 	out := new(RefreshAccessTokenResponse)
 	err := c.cc.Invoke(ctx, AuthService_RefreshAccessToken_FullMethodName, in, out, opts...)
@@ -74,6 +85,7 @@ func (c *authServiceClient) RefreshAccessToken(ctx context.Context, in *RefreshA
 type AuthServiceServer interface {
 	UserSignup(context.Context, *UserSignupRequest) (*UserSignupResponse, error)
 	UserSignupVerify(context.Context, *UserSignupVerifyRequest) (*UserSignupVerifyResponse, error)
+	UserLogin(context.Context, *UserLoginRequest) (*UserLoginResponse, error)
 	RefreshAccessToken(context.Context, *RefreshAccessTokenRequest) (*RefreshAccessTokenResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
@@ -87,6 +99,9 @@ func (UnimplementedAuthServiceServer) UserSignup(context.Context, *UserSignupReq
 }
 func (UnimplementedAuthServiceServer) UserSignupVerify(context.Context, *UserSignupVerifyRequest) (*UserSignupVerifyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserSignupVerify not implemented")
+}
+func (UnimplementedAuthServiceServer) UserLogin(context.Context, *UserLoginRequest) (*UserLoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserLogin not implemented")
 }
 func (UnimplementedAuthServiceServer) RefreshAccessToken(context.Context, *RefreshAccessTokenRequest) (*RefreshAccessTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshAccessToken not implemented")
@@ -140,6 +155,24 @@ func _AuthService_UserSignupVerify_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_UserLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).UserLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_UserLogin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).UserLogin(ctx, req.(*UserLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_RefreshAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RefreshAccessTokenRequest)
 	if err := dec(in); err != nil {
@@ -172,6 +205,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserSignupVerify",
 			Handler:    _AuthService_UserSignupVerify_Handler,
+		},
+		{
+			MethodName: "UserLogin",
+			Handler:    _AuthService_UserLogin_Handler,
 		},
 		{
 			MethodName: "RefreshAccessToken",

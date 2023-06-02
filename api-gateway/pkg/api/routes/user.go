@@ -16,6 +16,11 @@ func SetupUserRoutes(router *gin.Engine, authHandler handler.AuthHandler, userHa
 
 		}
 
+		login := auth.Group("/login")
+		{
+			login.POST("/", authHandler.UserLogin)
+		}
+
 		auth.POST("/refresh-token", authHandler.RefreshAccesstokenForUser)
 	}
 
