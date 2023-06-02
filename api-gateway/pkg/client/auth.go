@@ -51,7 +51,7 @@ func (c *authClient) UserSignupVerify(ctx context.Context, otpVerify utils.OtpVe
 		OtpId:   otpVerify.OtpID,
 		OtpCode: otpVerify.OtpCode,
 	})
-	if err == nil {
+	if err != nil {
 		return utils.TokenResponse{}, err
 	}
 

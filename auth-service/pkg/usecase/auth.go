@@ -84,7 +84,7 @@ func (c *authUsecase) OtpVerify(ctx context.Context, otpDetails utils.OtpVerify)
 	}
 
 	if time.Since(otpSession.ExpireAt) > 0 {
-		return 0, fmt.Errorf("otp expired")
+		return 0, fmt.Errorf("otp validation time expired")
 	}
 
 	err = c.userClient.UpdateUserVerified(ctx, otpSession.UserID)
