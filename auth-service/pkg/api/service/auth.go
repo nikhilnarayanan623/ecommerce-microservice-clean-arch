@@ -54,12 +54,12 @@ func (c *authServiceServer) UserSignupVerify(ctx context.Context, req *pb.UserSi
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())
 	}
 
-	accessToken, err := c.usecase.GenerateAccessToken(ctx, usreID)
+	accessToken, err := c.usecase.GenerateAccessToken(ctx, usreID, token.User)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())
 	}
 
-	refreshToken, err := c.usecase.GenereateRefreshToken(ctx, usreID)
+	refreshToken, err := c.usecase.GenereateRefreshToken(ctx, usreID, token.User)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())
 	}

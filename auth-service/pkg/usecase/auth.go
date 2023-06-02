@@ -22,7 +22,8 @@ type authUsecase struct {
 }
 
 const (
-	accessTokenDuration = time.Minute * 20
+	accessTokenDuration  = time.Minute * 20
+	refreshTokenDuration = time.Hour * 24 * 7
 )
 
 func NewAuthUsecase(repo repo.AuthRepository, userClient client.UserClient,
@@ -101,7 +102,7 @@ func (c *authUsecase) OtpVerify(ctx context.Context, otpDetails utils.OtpVerify)
 }
 
 // Generate AccessToken
-func (c *authUsecase) GenerateAccessToken(ctx context.Context, userID uint64) (accessToken string, err error) {
+func (c *authUsecase) GenerateAccessToken(ctx context.Context, userID uint64, tokenUser token.UserType) (accessToken string, err error) {
 
 	accessToken, err = c.tokenAuth.GenerateToken(token.TokenRequest{
 		TokenID:        "no_id",
@@ -113,14 +114,14 @@ func (c *authUsecase) GenerateAccessToken(ctx context.Context, userID uint64) (a
 }
 
 // Generate RefreshToken
-func (c *authUsecase) GenereateRefreshToken(ctx context.Context, userID uint64) (refreshToken string, err error) {
+func (c *authUsecase) GenereateRefreshToken(ctx context.Context, userID uint64, tokenUser token.UserType) (refreshToken string, err error) {
 
 	tokenID := utils.GenerateUniqueRandomString()
-	expireTime := time.Now().Add(time.Hour * 24 * 7)
+	expireTime := time.Now().Add(refreshTokenDuration)
 	refreshToken, err = c.tokenAuth.GenerateToken(token.TokenRequest{
 		TokenID:        tokenID,
 		UserID:         userID,
-		UsedFor:        token.User,
+		UsedFor:        tokenUser,
 		ExpirationDate: expireTime,
 	})
 	if err != nil {
