@@ -79,3 +79,17 @@ func (mr *MockUserUsecaseMockRecorder) SaveUser(ctx, user interface{}) *gomock.C
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveUser", reflect.TypeOf((*MockUserUsecase)(nil).SaveUser), ctx, user)
 }
+
+// UpdateUserVerified mocks base method.
+func (m *MockUserUsecase) UpdateUserVerified(ctx context.Context, userID uint64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateUserVerified", ctx, userID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateUserVerified indicates an expected call of UpdateUserVerified.
+func (mr *MockUserUsecaseMockRecorder) UpdateUserVerified(ctx, userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUserVerified", reflect.TypeOf((*MockUserUsecase)(nil).UpdateUserVerified), ctx, userID)
+}
