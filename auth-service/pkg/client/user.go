@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/client/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/config"
@@ -64,7 +65,8 @@ func (c *userClient) SaveUser(ctx context.Context, user domain.SaveUserRequest) 
 	if err != nil {
 		return 0, err
 	}
-	return res.UserId, nil
+	fmt.Println("user client res", res)
+	return res.GetUserId(), nil
 }
 
 func (c *userClient) UpdateUserVerified(ctx context.Context, userID uint64) error {

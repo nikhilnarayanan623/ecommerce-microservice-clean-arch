@@ -5,6 +5,7 @@ import (
 
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/domain"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/pb"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/token"
 	usecase "github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/usecase/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/utils"
 	"google.golang.org/grpc/codes"
@@ -22,6 +23,7 @@ func NewAuthServiceServer(usecase usecase.AuthUseCase) pb.AuthServiceServer {
 	}
 }
 
+// User Sginup
 func (c *authServiceServer) UserSignup(ctx context.Context, req *pb.UserSignupRequest) (*pb.UserSignupResponse, error) {
 
 	otpID, err := c.usecase.UserSignup(ctx, domain.SaveUserRequest{
@@ -39,6 +41,8 @@ func (c *authServiceServer) UserSignup(ctx context.Context, req *pb.UserSignupRe
 
 	return &pb.UserSignupResponse{OtpId: otpID}, nil
 }
+
+// User Signup Verify
 func (c *authServiceServer) UserSignupVerify(ctx context.Context, req *pb.UserSignupVerifyRequest) (*pb.UserSignupVerifyResponse, error) {
 
 	usreID, err := c.usecase.OtpVerify(ctx, utils.OtpVerify{
@@ -63,5 +67,24 @@ func (c *authServiceServer) UserSignupVerify(ctx context.Context, req *pb.UserSi
 	return &pb.UserSignupVerifyResponse{
 		AccesToken:   accessToken,
 		RefreshToken: refreshToken,
+	}, nil
+}
+
+// Generate access token with refresh token
+func (c *authServiceServer) RefreshAccessToken(ctx context.Context, req *pb.RefreshAccessTokenRequest) (*pb.RefreshAccessTokenResponse, error) {
+
+	// check the token refreshing for user or admin
+	tokenUser := token.User
+	if req.UsedFor == pb.RefreshAccessTokenRequest_Admin {
+		tokenUser = token.Admin
+	}
+
+	accessToken, err := c.usecase.RefreshAccessToken(ctx, req.GetRefreshToken(), tokenUser)
+	if err != nil {
+		return &pb.RefreshAccessTokenResponse{}, status.Errorf(codes.Internal, "%s", err.Error())
+	}
+
+	return &pb.RefreshAccessTokenResponse{
+		AccessToken: accessToken,
 	}, nil
 }

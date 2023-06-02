@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/domain"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/token"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/utils"
 )
 
@@ -12,4 +13,6 @@ type AuthUseCase interface {
 	OtpVerify(ctx context.Context, otpDetails utils.OtpVerify) (userID uint64, err error)
 	GenerateAccessToken(ctx context.Context, userID uint64) (accessToken string, err error)
 	GenereateRefreshToken(ctx context.Context, userID uint64) (refreshToken string, err error)
+
+	RefreshAccessToken(ctx context.Context, refreshToken string, tokenUser token.UserType) (accessToken string, err error)
 }

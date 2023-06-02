@@ -27,6 +27,14 @@ func (c *authDatabase) SaveRefreshSession(ctx context.Context, refreshSession do
 	return err
 }
 
+func (c *authDatabase) FindRefreshSessionByTokenID(ctx context.Context, tokenID string) (refreshSession domain.RefreshSession, err error) {
+	query := `SELECT * FROM refresh_sessions WHERE token_id = $1`
+
+	err = c.db.Raw(query, tokenID).Scan(&refreshSession).Error
+
+	return
+}
+
 func (c *authDatabase) SaveOtpSession(ctx context.Context, otpSession domain.OTPSession) error {
 
 	query := `INSERT INTO otp_sessions (otp_id, user_id, phone ,expire_at) 

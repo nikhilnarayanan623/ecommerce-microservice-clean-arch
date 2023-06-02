@@ -22,10 +22,11 @@ type TokenRequest struct {
 }
 
 type TokenVerifyRequest struct {
-	tokenString string
+	TokenString string
 	UsedFor     UserType
 }
 
 type TokenVerifyResponse struct {
-	UserID uint64
+	TokenID string
+	UserID  uint64
 }
