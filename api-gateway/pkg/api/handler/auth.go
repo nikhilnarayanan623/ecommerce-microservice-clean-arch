@@ -89,7 +89,7 @@ func (c *authHandler) UserSignupVerify(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
-func (c *authHandler) RefreshAccesstokenForUser(ctx *gin.Context) {
+func (c *authHandler) RefreshAccessTokenForUser(ctx *gin.Context) {
 
 	var body utils.RefreshTokenRequest
 
@@ -99,7 +99,7 @@ func (c *authHandler) RefreshAccesstokenForUser(ctx *gin.Context) {
 		return
 	}
 
-	accessToken, err := c.client.RefreshAccesstokenForUser(ctx, body.RefreshToken)
+	accessToken, err := c.client.RefreshAccessTokenForUser(ctx, body.RefreshToken)
 	if err != nil {
 		response := utils.ErrorResponse("failed to refresh access token", err.Error(), nil)
 		ctx.JSON(http.StatusBadRequest, response)
