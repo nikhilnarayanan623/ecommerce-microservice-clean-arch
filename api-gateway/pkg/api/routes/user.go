@@ -9,7 +9,12 @@ func SetupUserRoutes(router *gin.Engine, authHandler handler.AuthHandler, userHa
 
 	auth := router.Group("/auth")
 	{
-		auth.POST("/signup", authHandler.UserSignup)
+		signup := auth.Group("/signup")
+		{
+			signup.POST("/", authHandler.UserSignup)
+			signup.POST("/verify", authHandler.UserSignupVerify)
+
+		}
 	}
 
 }

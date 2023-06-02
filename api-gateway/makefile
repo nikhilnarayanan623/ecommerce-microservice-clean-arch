@@ -3,3 +3,9 @@ proto:
 
 mock:
 	mockgen -source=./pkg/pb/auth_grpc.pb.go -destination=./pkg/mock/client_mock.go -package=mock
+
+wire:
+	cd pkg/di && wire
+
+run: 
+	go run cmd/main.go

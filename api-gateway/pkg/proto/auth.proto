@@ -6,6 +6,7 @@ option go_package = "./pkg/pb";
 
 service AuthService {
     rpc UserSignup(UserSignupRequest) returns (UserSignupResponse){};
+    rpc UserSignupVerify(UserSignupVerifyRequest) returns (UserSignupVerifyResponse){}
 }
 
 message UserSignupRequest {
@@ -14,9 +15,20 @@ message UserSignupRequest {
     uint64 age = 3;
     string email = 4;
     string phone  = 5;
-    string passord = 6;
+    string user_name = 6;
+    string passord = 7;
 }
  
 message UserSignupResponse{
-    uint64 user_id = 1;
+    string otp_id = 1;
+}
+
+message UserSignupVerifyRequest {
+    string otp_id = 1;
+    string otp_code = 2;
+}
+
+message UserSignupVerifyResponse {
+    string acces_token = 1;
+    string refresh_token = 2;
 }

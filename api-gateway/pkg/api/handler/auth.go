@@ -43,6 +43,30 @@ func (c *authHandler) UserSignup(ctx *gin.Context) {
 		return
 	}
 
-	response := utils.SuccessResponse("successfully user signup completed", userID)
+	response := utils.SuccessResponse("successfully otp send to user registered number", userID)
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (c *authHandler) UserSignupVerify(ctx *gin.Context) {
+
+	var body utils.OtpVerify
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		response := utils.ErrorResponse("failed to bind inputs", err.Error(), body)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	tokenRes, err := c.client.UserSignupVerify(ctx, utils.OtpVerify{
+		OtpID:   body.OtpID,
+		OtpCode: body.OtpCode,
+	})
+
+	if err != nil {
+		response := utils.ErrorResponse("failed to verify otp", err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := utils.SuccessResponse("successfully otp verified ", tokenRes)
 	ctx.JSON(http.StatusOK, response)
 }

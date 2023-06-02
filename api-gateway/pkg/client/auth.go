@@ -7,6 +7,7 @@ import (
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/config"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/domain"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/pb"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -28,7 +29,7 @@ func NewAuthClient(cfg *config.Config) (interfaces.AuthClient, error) {
 	}, nil
 }
 
-func (c *authClient) UserSignup(ctx context.Context, req domain.UserSignupRequest) (userID uint64, err error) {
+func (c *authClient) UserSignup(ctx context.Context, req domain.UserSignupRequest) (otpID string, err error) {
 
 	res, err := c.client.UserSignup(ctx, &pb.UserSignupRequest{
 		FirstName: req.FirstName,
@@ -39,7 +40,23 @@ func (c *authClient) UserSignup(ctx context.Context, req domain.UserSignupReques
 		Passord:   req.Password,
 	})
 	if err != nil {
-		return userID, err
+		return otpID, err
 	}
-	return res.UserId, nil
+	return res.GetOtpId(), nil
+}
+
+func (c *authClient) UserSignupVerify(ctx context.Context, otpVerify utils.OtpVerify) (utils.TokenResponse, error) {
+
+	res, err := c.client.UserSignupVerify(ctx, &pb.UserSignupVerifyRequest{
+		OtpId:   otpVerify.OtpID,
+		OtpCode: otpVerify.OtpCode,
+	})
+	if err == nil {
+		return utils.TokenResponse{}, err
+	}
+
+	return utils.TokenResponse{
+		AccessToken:  res.GetAccesToken(),
+		RefreshToken: res.GetRefreshToken(),
+	}, nil
 }

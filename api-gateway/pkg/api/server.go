@@ -4,14 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 	handler "github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/api/handler/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/api/routes"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/config"
 )
 
 type Server struct {
+	port   string
 	engine *gin.Engine
 }
 
 // NewServerHTTP creates a new server with given handler functions
-func NewServerHTTP(authHandler handler.AuthHandler, userHandler handler.UserHandler) *Server {
+func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler, userHandler handler.UserHandler) *Server {
 	engine := gin.New()
 	engine.Use(gin.Logger())
 
@@ -20,5 +22,10 @@ func NewServerHTTP(authHandler handler.AuthHandler, userHandler handler.UserHand
 
 	return &Server{
 		engine: engine,
+		port:   cfg.Port,
 	}
+}
+
+func (c *Server) Start() {
+	c.engine.Run(c.port)
 }
