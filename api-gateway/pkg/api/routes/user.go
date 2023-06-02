@@ -21,7 +21,7 @@ func SetupUserRoutes(router *gin.Engine, authHandler handler.AuthHandler, userHa
 			login.POST("/", authHandler.UserLogin)
 		}
 
-		auth.POST("/refresh-token", authHandler.RefreshAccesstokenForUser)
+		auth.POST("/refresh-token", authHandler.RefreshAccessTokenForUser)
 	}
 
 }

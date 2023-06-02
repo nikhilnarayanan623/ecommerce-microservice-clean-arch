@@ -7,5 +7,5 @@ type AuthHandler interface {
 	UserSignupVerify(ctx *gin.Context)
 	UserLogin(ctx *gin.Context)
 
-	RefreshAccesstokenForUser(ctx *gin.Context)
+	RefreshAccessTokenForUser(ctx *gin.Context)
 }
