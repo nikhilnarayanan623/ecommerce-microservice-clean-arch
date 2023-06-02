@@ -36,6 +36,14 @@ func (c *userDatabase) FindUserByEmail(ctx context.Context, email string) (user 
 	return user, err
 }
 
+func (c *userDatabase) FindUserByPhone(ctx context.Context, phone string) (user domain.User, err error) {
+
+	query := `SELECT * FROM users WHERE phone = $1`
+	err = c.db.Raw(query, phone).Scan(&user).Error
+
+	return user, err
+}
+
 // Save a new user
 func (c *userDatabase) SaveUser(ctx context.Context, user domain.User) (uint64, error) {
 	query := `INSERT INTO users ( first_name, last_name, age, email, phone, password,created_at) 

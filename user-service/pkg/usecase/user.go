@@ -26,6 +26,9 @@ func (c *userUsecase) SaveUser(ctx context.Context, user domain.User) (userID ui
 func (c *userUsecase) FindUserByEmail(ctx context.Context, email string) (domain.User, error) {
 	return c.repo.FindUserByEmail(ctx, email)
 }
+func (c *userUsecase) FindUserByPhone(ctx context.Context, phone string) (domain.User, error) {
+	return c.repo.FindUserByPhone(ctx, phone)
+}
 func (c *userUsecase) FindUserByID(ctx context.Context, userID uint64) (domain.User, error) {
 	return c.repo.FindUserByUserID(ctx, userID)
 }

@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	UserService_SaveUser_FullMethodName           = "/pb.UserService/SaveUser"
 	UserService_FindUserByEmail_FullMethodName    = "/pb.UserService/FindUserByEmail"
+	UserService_FindUserByPhone_FullMethodName    = "/pb.UserService/FindUserByPhone"
 	UserService_UpdateUserVerified_FullMethodName = "/pb.UserService/UpdateUserVerified"
 )
 
@@ -31,6 +32,7 @@ const (
 type UserServiceClient interface {
 	SaveUser(ctx context.Context, in *SaveUserRequest, opts ...grpc.CallOption) (*SaveUserResponse, error)
 	FindUserByEmail(ctx context.Context, in *FindUserByEmailRequest, opts ...grpc.CallOption) (*FindUserByEmailResponse, error)
+	FindUserByPhone(ctx context.Context, in *FindUserByPhoneRequest, opts ...grpc.CallOption) (*FindUserByPhoneResponse, error)
 	UpdateUserVerified(ctx context.Context, in *UpdateUserVerifyRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
@@ -60,6 +62,15 @@ func (c *userServiceClient) FindUserByEmail(ctx context.Context, in *FindUserByE
 	return out, nil
 }
 
+func (c *userServiceClient) FindUserByPhone(ctx context.Context, in *FindUserByPhoneRequest, opts ...grpc.CallOption) (*FindUserByPhoneResponse, error) {
+	out := new(FindUserByPhoneResponse)
+	err := c.cc.Invoke(ctx, UserService_FindUserByPhone_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) UpdateUserVerified(ctx context.Context, in *UpdateUserVerifyRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, UserService_UpdateUserVerified_FullMethodName, in, out, opts...)
@@ -75,6 +86,7 @@ func (c *userServiceClient) UpdateUserVerified(ctx context.Context, in *UpdateUs
 type UserServiceServer interface {
 	SaveUser(context.Context, *SaveUserRequest) (*SaveUserResponse, error)
 	FindUserByEmail(context.Context, *FindUserByEmailRequest) (*FindUserByEmailResponse, error)
+	FindUserByPhone(context.Context, *FindUserByPhoneRequest) (*FindUserByPhoneResponse, error)
 	UpdateUserVerified(context.Context, *UpdateUserVerifyRequest) (*empty.Empty, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -88,6 +100,9 @@ func (UnimplementedUserServiceServer) SaveUser(context.Context, *SaveUserRequest
 }
 func (UnimplementedUserServiceServer) FindUserByEmail(context.Context, *FindUserByEmailRequest) (*FindUserByEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindUserByEmail not implemented")
+}
+func (UnimplementedUserServiceServer) FindUserByPhone(context.Context, *FindUserByPhoneRequest) (*FindUserByPhoneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindUserByPhone not implemented")
 }
 func (UnimplementedUserServiceServer) UpdateUserVerified(context.Context, *UpdateUserVerifyRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserVerified not implemented")
@@ -141,6 +156,24 @@ func _UserService_FindUserByEmail_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_FindUserByPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindUserByPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FindUserByPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_FindUserByPhone_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FindUserByPhone(ctx, req.(*FindUserByPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_UpdateUserVerified_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateUserVerifyRequest)
 	if err := dec(in); err != nil {
@@ -173,6 +206,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FindUserByEmail",
 			Handler:    _UserService_FindUserByEmail_Handler,
+		},
+		{
+			MethodName: "FindUserByPhone",
+			Handler:    _UserService_FindUserByPhone_Handler,
 		},
 		{
 			MethodName: "UpdateUserVerified",
