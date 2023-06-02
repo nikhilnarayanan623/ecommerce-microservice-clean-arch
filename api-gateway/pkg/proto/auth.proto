@@ -7,9 +7,11 @@ option go_package = "./pkg/pb";
 service AuthService {
     rpc UserSignup(UserSignupRequest) returns (UserSignupResponse){};
     rpc UserSignupVerify(UserSignupVerifyRequest) returns (UserSignupVerifyResponse){}
+    rpc UserLogin(UserLoginRequest) returns (UserLoginResponse){};
     rpc RefreshAccessToken(RefreshAccessTokenRequest) returns (RefreshAccessTokenResponse) {}
 }
 
+// User Signup
 message UserSignupRequest {
     string first_name = 1;
     string last_name = 2;
@@ -24,17 +26,30 @@ message UserSignupResponse{
     string otp_id = 1;
 }
 
+// User signup verify
 message UserSignupVerifyRequest {
     string otp_id = 1;
     string otp_code = 2;
 }
 
 message UserSignupVerifyResponse {
-    string acces_token = 1;
+    string access_token = 1;
     string refresh_token = 2;
 }
 
-// refresh access token
+// User login
+message UserLoginRequest {
+    string email = 1;
+    string phone = 2;
+    string password = 3;
+}
+
+message UserLoginResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+}
+
+// Refresh access token
 message RefreshAccessTokenRequest {
     enum UserType {
         User = 0;

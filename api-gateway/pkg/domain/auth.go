@@ -8,3 +8,9 @@ type UserSignupRequest struct {
 	Phone     string `json:"phone" binding:"required,min=10,max=10"`
 	Password  string `json:"password" binding:"required,min=6,max=30"`
 }
+
+type UserLoginRequest struct {
+	Email    string `json:"email" binding:"omitempty,email"`
+	Phone    string `json:"phone" binding:"omitempty,min=10,max=10"`
+	Password string `json:"password" binding:"required"`
+}

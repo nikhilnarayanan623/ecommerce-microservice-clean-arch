@@ -56,7 +56,24 @@ func (c *authClient) UserSignupVerify(ctx context.Context, otpVerify utils.OtpVe
 	}
 
 	return utils.TokenResponse{
-		AccessToken:  res.GetAccesToken(),
+		AccessToken:  res.GetAccessToken(),
+		RefreshToken: res.GetRefreshToken(),
+	}, nil
+}
+
+// User Login
+func (c *authClient) UserLogin(ctx context.Context, loginDetails domain.UserLoginRequest) (utils.TokenResponse, error) {
+
+	res, err := c.client.UserLogin(ctx, &pb.UserLoginRequest{
+		Email:    loginDetails.Email,
+		Phone:    loginDetails.Phone,
+		Password: loginDetails.Password,
+	})
+	if err != nil {
+		return utils.TokenResponse{}, err
+	}
+	return utils.TokenResponse{
+		AccessToken:  res.GetAccessToken(),
 		RefreshToken: res.GetRefreshToken(),
 	}, nil
 }

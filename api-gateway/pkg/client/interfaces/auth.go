@@ -10,5 +10,6 @@ import (
 type AuthClient interface {
 	UserSignup(ctx context.Context, req domain.UserSignupRequest) (otpID string, err error)
 	UserSignupVerify(ctx context.Context, otpVerify utils.OtpVerify) (utils.TokenResponse, error)
+	UserLogin(ctx context.Context, loginDetails domain.UserLoginRequest) (utils.TokenResponse, error)
 	RefreshAccesstokenForUser(ctx context.Context, refreshToken string) (accessToken string, err error)
 }

@@ -23,6 +23,24 @@ func NewAuthHandler(client client.AuthClient) interfaces.AuthHandler {
 
 func (c *authHandler) UserLogin(ctx *gin.Context) {
 
+	var body domain.UserLoginRequest
+
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		response := utils.ErrorResponse("failed bind inputs", err.Error(), body)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	tokenRes, err := c.client.UserLogin(ctx, body)
+
+	if err != nil {
+		response := utils.ErrorResponse("failed to login", err.Error(), nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := utils.SuccessResponse("successfully login completede ", tokenRes)
+	ctx.JSON(http.StatusOK, response)
 }
 
 func (c *authHandler) UserSignup(ctx *gin.Context) {
