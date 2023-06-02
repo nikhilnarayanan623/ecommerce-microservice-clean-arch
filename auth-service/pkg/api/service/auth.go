@@ -45,7 +45,7 @@ func (c *authServiceServer) UserSignup(ctx context.Context, req *pb.UserSignupRe
 // User Signup Verify
 func (c *authServiceServer) UserSignupVerify(ctx context.Context, req *pb.UserSignupVerifyRequest) (*pb.UserSignupVerifyResponse, error) {
 
-	usreID, err := c.usecase.OtpVerify(ctx, utils.OtpVerify{
+	userID, err := c.usecase.OtpVerify(ctx, utils.OtpVerify{
 		OtpID:   req.GetOtpId(),
 		OtpCode: req.GetOtpCode(),
 	})
@@ -54,18 +54,18 @@ func (c *authServiceServer) UserSignupVerify(ctx context.Context, req *pb.UserSi
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())
 	}
 
-	accessToken, err := c.usecase.GenerateAccessToken(ctx, usreID, token.User)
+	accessToken, err := c.usecase.GenerateAccessToken(ctx, userID, token.User)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())
 	}
 
-	refreshToken, err := c.usecase.GenereateRefreshToken(ctx, usreID, token.User)
+	refreshToken, err := c.usecase.GenereateRefreshToken(ctx, userID, token.User)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())
 	}
 
 	return &pb.UserSignupVerifyResponse{
-		AccesToken:   accessToken,
+		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil
 }
@@ -86,5 +86,32 @@ func (c *authServiceServer) RefreshAccessToken(ctx context.Context, req *pb.Refr
 
 	return &pb.RefreshAccessTokenResponse{
 		AccessToken: accessToken,
+	}, nil
+}
+
+func (c *authServiceServer) UserLogin(ctx context.Context, req *pb.UserLoginRequest) (*pb.UserLoginResponse, error) {
+
+	userID, err := c.usecase.UserLogin(ctx, domain.UserLoginRequest{
+		Email:    req.GetEmail(),
+		Phone:    req.GetPhone(),
+		Password: req.GetPassword(),
+	})
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "%s", err.Error())
+	}
+
+	accessToken, err := c.usecase.GenerateAccessToken(ctx, userID, token.User)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "%s", err.Error())
+	}
+
+	refreshToken, err := c.usecase.GenereateRefreshToken(ctx, userID, token.User)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "%s", err.Error())
+	}
+
+	return &pb.UserLoginResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}, nil
 }

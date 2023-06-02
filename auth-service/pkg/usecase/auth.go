@@ -51,8 +51,13 @@ func (c *authUsecase) UserSignup(ctx context.Context, user domain.SaveUserReques
 	userID := existUser.ID
 	// if user not exist then save the user
 	if userID == 0 {
+
+		user.Password, err = utils.GenerateHashFromPassword(user.Password)
+		if err != nil {
+			return "", fmt.Errorf("failed to hash user password")
+		}
+
 		userID, err = c.userClient.SaveUser(ctx, user)
-		fmt.Println("user_id=0:", userID)
 		if err != nil {
 			return "", fmt.Errorf("failed to save user \nerror%s", err.Error())
 		}
@@ -65,7 +70,7 @@ func (c *authUsecase) UserSignup(ctx context.Context, user domain.SaveUserReques
 
 	otpID = utils.GenerateUniqueRandomString()
 	otpExpireTime := time.Now().Add(time.Minute * 5)
-	err = c.repo.SaveOtpSession(ctx, domain.OTPSession{
+	err = c.repo.SaveOtpSession(ctx, domain.OtpSession{
 		OtpID:    otpID,
 		UserID:   userID,
 		Phone:    user.Phone,
@@ -93,7 +98,20 @@ func (c *authUsecase) OtpVerify(ctx context.Context, otpDetails utils.OtpVerify)
 		return 0, fmt.Errorf("otp validation time expired")
 	}
 
-	err = c.userClient.UpdateUserVerified(ctx, otpSession.UserID)
+	err = c.repo.Transactions(func(repo repo.AuthRepository) error {
+
+		err = c.userClient.UpdateUserVerified(ctx, otpSession.UserID)
+		if err != nil {
+			return err
+		}
+
+		err = repo.DeleteAllOtpSessionsByUserID(ctx, otpSession.UserID)
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+
 	if err != nil {
 		return 0, err
 	}
@@ -140,6 +158,40 @@ func (c *authUsecase) GenereateRefreshToken(ctx context.Context, userID uint64, 
 	}
 
 	return refreshToken, nil
+}
+
+// UserLogin
+func (c *authUsecase) UserLogin(ctx context.Context, loginDetail domain.UserLoginRequest) (uint64, error) {
+
+	var (
+		user domain.User
+		err  error
+	)
+
+	if loginDetail.Email != "" {
+		user, err = c.userClient.FindUserByEmail(ctx, loginDetail.Email)
+	} else {
+		user, err = c.userClient.FindUserByPhone(ctx, loginDetail.Phone)
+	}
+
+	if err != nil {
+		return 0, fmt.Errorf("failed to find user \nerror:%s", err.Error())
+	}
+	if user.ID == 0 {
+		return 0, fmt.Errorf("user not exist with given details")
+	}
+
+	if !user.Verified {
+		return 0, fmt.Errorf("user not verified")
+	} else if user.BlockStatus {
+		return 0, fmt.Errorf("user blocked by admin")
+	}
+
+	if !utils.VerifyHashAndPassword(user.Password, loginDetail.Password) {
+		return 0, fmt.Errorf("password doesn't match with given password")
+	}
+
+	return user.ID, nil
 }
 
 // Refresh AccessToken
