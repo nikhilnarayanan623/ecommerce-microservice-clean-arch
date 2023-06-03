@@ -20,7 +20,7 @@ message UserSignupRequest {
     string email = 4;
     string phone  = 5;
     string user_name = 6;
-    string passord = 7;
+    string password = 7;
 }
 message UserSignupResponse{
     string otp_id = 1;

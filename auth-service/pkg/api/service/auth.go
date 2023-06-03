@@ -32,7 +32,7 @@ func (c *authServiceServer) UserSignup(ctx context.Context, req *pb.UserSignupRe
 		Age:       req.GetAge(),
 		Email:     req.GetEmail(),
 		Phone:     req.GetPhone(),
-		Password:  req.GetPassord(),
+		Password:  req.GetPassword(),
 	})
 
 	if err != nil {

@@ -25,7 +25,7 @@ func InitializeServices(cfg *config.Config) (*api.ServiceServer, error) {
 		token.NewJWTAuth,
 		client.NewUserClient, usecase.NewAuthUsecase,
 		service.NewAuthServiceServer,
-		api.ServerGRPC,
+		api.NewServerGRPC,
 	)
 	return &api.ServiceServer{}, nil
 }
