@@ -34,7 +34,7 @@ func InitializeServices(cfg *config.Config) (*api.ServiceServer, error) {
 	tokenAuth := token.NewJWTAuth(cfg)
 	authUseCase := usecase.NewAuthUsecase(authRepository, userClient, otpVerification, tokenAuth)
 	authServiceServer := service.NewAuthServiceServer(authUseCase)
-	serviceServer, err := api.ServerGRPC(cfg, authServiceServer)
+	serviceServer, err := api.NewServerGRPC(cfg, authServiceServer)
 	if err != nil {
 		return nil, err
 	}

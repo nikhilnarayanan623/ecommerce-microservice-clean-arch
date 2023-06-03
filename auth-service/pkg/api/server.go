@@ -14,7 +14,7 @@ type ServiceServer struct {
 	lis net.Listener
 }
 
-func ServerGRPC(cfg *config.Config, server pb.AuthServiceServer) (*ServiceServer, error) {
+func NewServerGRPC(cfg *config.Config, server pb.AuthServiceServer) (*ServiceServer, error) {
 
 	grpcServer := grpc.NewServer()
 	pb.RegisterAuthServiceServer(grpcServer, server)
