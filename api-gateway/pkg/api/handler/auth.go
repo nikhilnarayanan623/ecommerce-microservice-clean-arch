@@ -2,13 +2,13 @@ package handler
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/api/handler/interfaces"
 	client "github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/client/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/domain"
-	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/request"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/response"
 )
 
 type authHandler struct {
@@ -26,21 +26,18 @@ func (c *authHandler) UserLogin(ctx *gin.Context) {
 	var body domain.UserLoginRequest
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
-		response := utils.ErrorResponse("failed bind inputs", err.Error(), body)
-		ctx.JSON(http.StatusBadRequest, response)
+		response.ErrorResponse(ctx, "failed bind inputs", err, body)
 		return
 	}
 
 	tokenRes, err := c.client.UserLogin(ctx, body)
 
 	if err != nil {
-		response := utils.ErrorResponse("failed to login", err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		response.ErrorResponse(ctx, "failed to login", err, nil)
 		return
 	}
 
-	response := utils.SuccessResponse("successfully login completede ", tokenRes)
-	ctx.JSON(http.StatusOK, response)
+	response.SuccessResponse(ctx, "successfully login completed", tokenRes)
 }
 
 func (c *authHandler) UserSignup(ctx *gin.Context) {
@@ -48,64 +45,55 @@ func (c *authHandler) UserSignup(ctx *gin.Context) {
 	var body domain.UserSignupRequest
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
-		response := utils.ErrorResponse("failed bind inputs", err.Error(), body)
-		ctx.JSON(http.StatusBadRequest, response)
+		response.ErrorResponse(ctx, "failed bind inputs", err, body)
 		return
 	}
 
 	userID, err := c.client.UserSignup(context.Background(), body)
 
 	if err != nil {
-		response := utils.ErrorResponse("faild to signup user", err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		response.ErrorResponse(ctx, "failed to signup user", err, nil)
 		return
 	}
 
-	response := utils.SuccessResponse("successfully otp send to user registered number", userID)
-	ctx.JSON(http.StatusOK, response)
+	response.SuccessResponse(ctx, "successfully otp send to user registered number", userID)
 }
 
 func (c *authHandler) UserSignupVerify(ctx *gin.Context) {
 
-	var body utils.OtpVerify
+	var body request.OtpVerify
 	if err := ctx.ShouldBindJSON(&body); err != nil {
-		response := utils.ErrorResponse("failed to bind inputs", err.Error(), body)
-		ctx.JSON(http.StatusBadRequest, response)
+		response.ErrorResponse(ctx, "failed bind inputs", err, body)
 		return
 	}
 
-	tokenRes, err := c.client.UserSignupVerify(ctx, utils.OtpVerify{
+	tokenRes, err := c.client.UserSignupVerify(ctx, request.OtpVerify{
 		OtpID:   body.OtpID,
 		OtpCode: body.OtpCode,
 	})
 
 	if err != nil {
-		response := utils.ErrorResponse("failed to verify otp", err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		response.ErrorResponse(ctx, "failed to verify otp", err, nil)
 		return
 	}
 
-	response := utils.SuccessResponse("successfully otp verified ", tokenRes)
-	ctx.JSON(http.StatusOK, response)
+	response.SuccessResponse(ctx, "successfully otp verified ", tokenRes)
 }
 
 func (c *authHandler) RefreshAccessTokenForUser(ctx *gin.Context) {
 
-	var body utils.RefreshTokenRequest
+	var body request.RefreshTokenRequest
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
-		response := utils.ErrorResponse("failed to bind inputs", err.Error(), body)
-		ctx.JSON(http.StatusBadRequest, response)
+		response.ErrorResponse(ctx, "failed bind inputs", err, body)
 		return
 	}
 
 	accessToken, err := c.client.RefreshAccessTokenForUser(ctx, body.RefreshToken)
 	if err != nil {
-		response := utils.ErrorResponse("failed to refresh access token", err.Error(), nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		response.ErrorResponse(ctx, "failed to refresh access token", err, nil)
 		return
 	}
 
-	response := utils.SuccessResponse("successfully access_token generated", accessToken)
-	ctx.JSON(http.StatusOK, response)
+	response.SuccessResponse(ctx, "successfully access_token generated", accessToken)
 }

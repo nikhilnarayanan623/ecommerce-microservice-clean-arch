@@ -1,4 +1,4 @@
-package utils
+package request
 
 type OtpVerify struct {
 	OtpID   string `json:"otp_id" binding:"required"`

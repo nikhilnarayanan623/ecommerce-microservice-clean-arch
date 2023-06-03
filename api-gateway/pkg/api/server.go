@@ -13,12 +13,13 @@ type Server struct {
 }
 
 // NewServerHTTP creates a new server with given handler functions
-func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler, userHandler handler.UserHandler) *Server {
+func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler, userHandler handler.UserHandler,
+	productHandler handler.ProductHandler) *Server {
 	engine := gin.New()
 	engine.Use(gin.Logger())
 
 	routes.SetupUserRoutes(engine, authHandler, userHandler)
-	routes.SetupAdminRoutes(engine)
+	routes.SetupAdminRoutes(engine, productHandler)
 
 	return &Server{
 		engine: engine,
