@@ -6,4 +6,5 @@ type ProductHandler interface {
 	AddCategory(ctx *gin.Context)
 	AddVariation(ctx *gin.Context)
 	AddVariationOption(ctx *gin.Context)
+	FindAllCategories(ctx *gin.Context)
 }

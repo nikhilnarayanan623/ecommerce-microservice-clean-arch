@@ -6,6 +6,7 @@ import (
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/domain"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/repository/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils/request"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils/response"
 	"gorm.io/gorm"
 )
 
@@ -49,6 +50,16 @@ func (c *productDatabase) FindCategoryByID(ctx context.Context, categoryID uint6
 
 	return category, err
 }
+
+func (c *productDatabase) FindAllCategories(ctx context.Context) (categories []response.Category, err error) {
+
+	query := `SELECT c.id, c.name, mc.id AS category_id, mc.name AS main_category_name  FROM categories c 
+	LEFT JOIN categories mc ON c.category_id = mc.id`
+	err = c.db.Raw(query).Scan(&categories).Error
+
+	return
+}
+
 func (c *productDatabase) SaveVariation(ctx context.Context, variation request.AddVariation) (variationID uint64, err error) {
 
 	query := `INSERT INTO variations (category_id, name) 

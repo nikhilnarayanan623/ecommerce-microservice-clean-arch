@@ -6,6 +6,7 @@ option go_package = "./pkg/pb";
 
 service ProductService {
     rpc AddCategory(AddCategoryRequest) returns (AddCategoryResponse){};
+    rpc FindAllCategories(FindAllCategoriesRequest) returns (FindAllCategoriesResponse){};
     rpc AddVariation(AddVariationRequest) returns (AddVariationResponse){};
     rpc AddVariationOption(AddVariationOptionRequest) returns (AddVariationOptionResponse){};
     rpc AddProduct(AddProductRequest) returns (AddProductResponse){};
@@ -16,9 +17,21 @@ message AddCategoryRequest{
     uint64 main_category_id = 1;
     string category_name = 2;
 }
-
 message AddCategoryResponse{
     uint64 category_id = 1;
+}
+
+message FindAllCategoriesRequest {
+
+}
+message FindAllCategoriesResponse{
+    message Categories {
+        uint64 id = 1;
+        string name = 2;
+        uint64 main_category_id = 3;
+        string main_category_name = 4;
+    }
+    repeated Categories categories = 1;
 }
 
 // Add Variation

@@ -7,6 +7,7 @@ import (
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/config"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/pb"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/request"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/response"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -59,4 +60,22 @@ func (c *productClient) AddVariationOption(ctx context.Context, variationOption 
 		return 0, err
 	}
 	return res.GetVariationOptionId(), nil
+}
+
+func (c *productClient) FindAllCategories(ctx context.Context) ([]response.Category, error) {
+
+	res, err := c.client.FindAllCategories(ctx, &pb.FindAllCategoriesRequest{})
+	if err != nil {
+		return nil, err
+	}
+
+	categories := make([]response.Category, len(res.GetCategories()))
+
+	for i, category := range res.GetCategories() {
+		categories[i].ID = category.GetId()
+		categories[i].Name = category.GetName()
+		categories[i].CategoryID = category.GetMainCategoryId()
+		categories[i].MainCategoryName = category.GetMainCategoryName()
+	}
+	return categories, nil
 }

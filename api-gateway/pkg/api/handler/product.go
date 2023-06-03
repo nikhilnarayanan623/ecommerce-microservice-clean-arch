@@ -64,3 +64,14 @@ func (c *productHandler) AddVariationOption(ctx *gin.Context) {
 	}
 	response.SuccessResponse(ctx, "successfully variation_option added", variationOptionID)
 }
+
+func (c *productHandler) FindAllCategories(ctx *gin.Context) {
+
+	categories, err := c.client.FindAllCategories(ctx)
+	if err != nil{
+		response.ErrorResponse(ctx,"failed to find all categories",err,nil)
+		return
+	}
+
+	response.SuccessResponse(ctx,"successfully found all categories",categories)
+}

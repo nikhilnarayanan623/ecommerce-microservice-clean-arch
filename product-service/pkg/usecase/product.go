@@ -8,6 +8,7 @@ import (
 	repo "github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/repository/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/usecase/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils/request"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils/response"
 )
 
 type productUseCase struct {
@@ -103,4 +104,9 @@ func (c *productUseCase) AddVariationOption(ctx context.Context, variationOption
 	}
 
 	return variationOptionID, nil
+}
+
+func (c *productUseCase) FindAllCategories(ctx context.Context) ([]response.Category, error) {
+	categories, err := c.repo.FindAllCategories(ctx)
+	return categories, err
 }

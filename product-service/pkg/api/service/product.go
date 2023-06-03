@@ -93,6 +93,32 @@ func (c *productServiceServer) AddVariationOption(ctx context.Context, req *pb.A
 	return &pb.AddVariationOptionResponse{VariationOptionId: variationOptionID}, nil
 }
 
+func (c *productServiceServer) FindAllCategories(ctx context.Context, req *pb.FindAllCategoriesRequest) (*pb.FindAllCategoriesResponse, error) {
+	utils.LogMessage(utils.Cyan, "FindAllCategories Invoked")
+
+	categories, err := c.usecase.FindAllCategories(ctx)
+	if err != nil {
+		utils.LogMessage(utils.Red, err.Error())
+		return nil, status.Error(codes.Internal, "failed to find all categories")
+	}
+
+	outputCategories := make([]*pb.FindAllCategoriesResponse_Categories, len(categories))
+	for i, category := range categories {
+
+		outputCategories[i] = &pb.FindAllCategoriesResponse_Categories{
+			Id:               category.ID,
+			Name:             category.Name,
+			MainCategoryId:   category.CategoryID,
+			MainCategoryName: category.MainCategoryName,
+		}
+	}
+	utils.LogMessage(utils.Green, "successfully found all categories")
+
+	return &pb.FindAllCategoriesResponse{
+		Categories: outputCategories,
+	}, nil
+}
+
 // func (c *productServiceServer) AddProduct(ctx context.Context, req *pb.AddProductRequest) (*pb.AddProductResponse, error) {
 
 // }
