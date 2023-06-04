@@ -21,4 +21,8 @@ type ProductRepository interface {
 	SaveVariationOption(ctx context.Context, variationOption request.AddVariationOption) (variationOptionID uint64, err error)
 	FindVariationOptionByValue(ctx context.Context, variationValue string) (domain.VariationOption, error)
 	FindVariationOptionByID(ctx context.Context, variationOptionID uint64) (domain.VariationOption, error)
+
+	SaveProduct(ctx context.Context, product request.AddProduct) (productID uint64, err error)
+	IsProductNameAlreadyExist(ctx context.Context, productName string) (exist bool, err error)
+	FindAllProducts(ctx context.Context, pagination request.Pagination) ([]response.Product, error)
 }

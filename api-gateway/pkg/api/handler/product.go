@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/api/handler/interfaces"
 	client "github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/client/interfaces"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/request"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/response"
 )
@@ -68,10 +69,40 @@ func (c *productHandler) AddVariationOption(ctx *gin.Context) {
 func (c *productHandler) FindAllCategories(ctx *gin.Context) {
 
 	categories, err := c.client.FindAllCategories(ctx)
-	if err != nil{
-		response.ErrorResponse(ctx,"failed to find all categories",err,nil)
+	if err != nil {
+		response.ErrorResponse(ctx, "failed to find all categories", err, nil)
 		return
 	}
 
-	response.SuccessResponse(ctx,"successfully found all categories",categories)
+	response.SuccessResponse(ctx, "successfully found all categories", categories)
+}
+
+func (c *productHandler) AddProduct(ctx *gin.Context) {
+
+	var body request.AddProduct
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		response.ErrorResponse(ctx, "failed to bind inputs", err, body)
+		return
+	}
+
+	productID, err := c.client.AddProduct(ctx, body)
+	if err != nil {
+		response.ErrorResponse(ctx, "failed to add product", err, nil)
+		return
+	}
+
+	response.SuccessResponse(ctx, "successfully product added", productID)
+}
+
+func (c *productHandler) FindAllProducts(ctx *gin.Context) {
+
+	pagination := utils.GetPagination(ctx)
+
+	products, err := c.client.FindAllProducts(ctx, pagination)
+	if err != nil {
+		response.ErrorResponse(ctx, "failed to find all products", err, nil)
+		return
+	}
+
+	response.SuccessResponse(ctx, "successfully found all products", products)
 }

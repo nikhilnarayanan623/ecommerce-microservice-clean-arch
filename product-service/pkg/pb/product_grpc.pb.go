@@ -24,6 +24,7 @@ const (
 	ProductService_AddVariation_FullMethodName       = "/pb.ProductService/AddVariation"
 	ProductService_AddVariationOption_FullMethodName = "/pb.ProductService/AddVariationOption"
 	ProductService_AddProduct_FullMethodName         = "/pb.ProductService/AddProduct"
+	ProductService_FindAllProducts_FullMethodName    = "/pb.ProductService/FindAllProducts"
 )
 
 // ProductServiceClient is the client API for ProductService service.
@@ -35,6 +36,7 @@ type ProductServiceClient interface {
 	AddVariation(ctx context.Context, in *AddVariationRequest, opts ...grpc.CallOption) (*AddVariationResponse, error)
 	AddVariationOption(ctx context.Context, in *AddVariationOptionRequest, opts ...grpc.CallOption) (*AddVariationOptionResponse, error)
 	AddProduct(ctx context.Context, in *AddProductRequest, opts ...grpc.CallOption) (*AddProductResponse, error)
+	FindAllProducts(ctx context.Context, in *FindAllProductsRequest, opts ...grpc.CallOption) (*FindAllProductsResponse, error)
 }
 
 type productServiceClient struct {
@@ -90,6 +92,15 @@ func (c *productServiceClient) AddProduct(ctx context.Context, in *AddProductReq
 	return out, nil
 }
 
+func (c *productServiceClient) FindAllProducts(ctx context.Context, in *FindAllProductsRequest, opts ...grpc.CallOption) (*FindAllProductsResponse, error) {
+	out := new(FindAllProductsResponse)
+	err := c.cc.Invoke(ctx, ProductService_FindAllProducts_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductServiceServer is the server API for ProductService service.
 // All implementations must embed UnimplementedProductServiceServer
 // for forward compatibility
@@ -99,6 +110,7 @@ type ProductServiceServer interface {
 	AddVariation(context.Context, *AddVariationRequest) (*AddVariationResponse, error)
 	AddVariationOption(context.Context, *AddVariationOptionRequest) (*AddVariationOptionResponse, error)
 	AddProduct(context.Context, *AddProductRequest) (*AddProductResponse, error)
+	FindAllProducts(context.Context, *FindAllProductsRequest) (*FindAllProductsResponse, error)
 	mustEmbedUnimplementedProductServiceServer()
 }
 
@@ -120,6 +132,9 @@ func (UnimplementedProductServiceServer) AddVariationOption(context.Context, *Ad
 }
 func (UnimplementedProductServiceServer) AddProduct(context.Context, *AddProductRequest) (*AddProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddProduct not implemented")
+}
+func (UnimplementedProductServiceServer) FindAllProducts(context.Context, *FindAllProductsRequest) (*FindAllProductsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindAllProducts not implemented")
 }
 func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
 
@@ -224,6 +239,24 @@ func _ProductService_AddProduct_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductService_FindAllProducts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindAllProductsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).FindAllProducts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_FindAllProducts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).FindAllProducts(ctx, req.(*FindAllProductsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProductService_ServiceDesc is the grpc.ServiceDesc for ProductService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -250,6 +283,10 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddProduct",
 			Handler:    _ProductService_AddProduct_Handler,
+		},
+		{
+			MethodName: "FindAllProducts",
+			Handler:    _ProductService_FindAllProducts_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -16,9 +16,14 @@ type AddVariationOption struct {
 }
 
 type AddProduct struct {
-	ProductName string
+	Name        string
 	Description string
 	CategoryID  uint64
 	Price       float64
 	Image       string
+}
+
+type Pagination struct {
+	PageNumber uint64
+	Count      uint64
 }

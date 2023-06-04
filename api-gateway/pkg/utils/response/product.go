@@ -6,3 +6,13 @@ type Category struct {
 	MainCategoryName string `json:"main_category_name"`
 	Name             string `json:"name"`
 }
+
+type Product struct {
+	ID           uint64
+	Name         string
+	Description  string
+	Price        float64
+	Image        string
+	CategoryID   uint64
+	CategoryName string
+}

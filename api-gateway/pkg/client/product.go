@@ -62,6 +62,7 @@ func (c *productClient) AddVariationOption(ctx context.Context, variationOption 
 	return res.GetVariationOptionId(), nil
 }
 
+// Find all categories
 func (c *productClient) FindAllCategories(ctx context.Context) ([]response.Category, error) {
 
 	res, err := c.client.FindAllCategories(ctx, &pb.FindAllCategoriesRequest{})
@@ -78,4 +79,47 @@ func (c *productClient) FindAllCategories(ctx context.Context) ([]response.Categ
 		categories[i].MainCategoryName = category.GetMainCategoryName()
 	}
 	return categories, nil
+}
+
+// Add Product
+func (c *productClient) AddProduct(ctx context.Context, product request.AddProduct) (uint64, error) {
+	res, err := c.client.AddProduct(ctx, &pb.AddProductRequest{
+		Name:        product.Name,
+		Description: product.Description,
+		CategoryId:  product.CategoryID,
+		Price:       product.Price,
+		Image:       product.Image,
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return res.GetProductId(), nil
+}
+
+func (c *productClient) FindAllProducts(ctx context.Context, pagination request.Pagination) ([]response.Product, error) {
+
+	res, err := c.client.FindAllProducts(ctx, &pb.FindAllProductsRequest{
+		PageNumber: pagination.PageNumber,
+		Count:      pagination.Count,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	products := make([]response.Product, len((res.Products)))
+
+	for i, resProduct := range res.GetProducts() {
+		products[i] = response.Product{
+			ID:           resProduct.GetId(),
+			Name:         resProduct.GetName(),
+			Description:  resProduct.GetDescription(),
+			Price:        resProduct.GetPrice(),
+			Image:        resProduct.GetImage(),
+			CategoryID:   resProduct.GetCategoryId(),
+			CategoryName: resProduct.GetCategoryName(),
+		}
+	}
+
+	return products, nil
 }

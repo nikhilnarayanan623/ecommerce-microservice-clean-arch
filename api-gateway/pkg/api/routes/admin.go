@@ -11,4 +11,7 @@ func SetupAdminRoutes(engine *gin.Engine, productHandler handler.ProductHandler)
 	engine.GET("/category", productHandler.FindAllCategories)
 	engine.POST("/variation", productHandler.AddVariation)
 	engine.POST("/variation/option", productHandler.AddVariationOption)
+
+	engine.POST("/product", productHandler.AddProduct)
+	engine.GET("/product", productHandler.FindAllProducts)
 }

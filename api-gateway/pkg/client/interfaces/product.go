@@ -13,4 +13,6 @@ type ProductClient interface {
 	AddVariationOption(ctx context.Context, variationOption request.AddVariationOption) (variationOptionID uint64, err error)
 
 	FindAllCategories(ctx context.Context) ([]response.Category, error)
+	AddProduct(ctx context.Context, product request.AddProduct) (productID uint64, err error)
+	FindAllProducts(ctx context.Context, pagination request.Pagination) ([]response.Product, error)
 }
