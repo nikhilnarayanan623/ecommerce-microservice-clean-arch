@@ -2,10 +2,13 @@ package repository
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/domain"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/repository/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils/request"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils/response"
 	"gorm.io/gorm"
 )
 
@@ -49,6 +52,16 @@ func (c *productDatabase) FindCategoryByID(ctx context.Context, categoryID uint6
 
 	return category, err
 }
+
+func (c *productDatabase) FindAllCategories(ctx context.Context) (categories []response.Category, err error) {
+
+	query := `SELECT c.id, c.name, mc.id AS category_id, mc.name AS main_category_name  FROM categories c 
+	LEFT JOIN categories mc ON c.category_id = mc.id`
+	err = c.db.Raw(query).Scan(&categories).Error
+
+	return
+}
+
 func (c *productDatabase) SaveVariation(ctx context.Context, variation request.AddVariation) (variationID uint64, err error) {
 
 	query := `INSERT INTO variations (category_id, name) 
@@ -99,4 +112,37 @@ func (c *productDatabase) FindVariationOptionByID(ctx context.Context, variation
 	err := c.db.Raw(query, variationOptionID).Scan(&variationOption).Error
 
 	return variationOption, err
+}
+
+func (c *productDatabase) SaveProduct(ctx context.Context, product request.AddProduct) (productID uint64, err error) {
+
+	query := `INSERT INTO products (name, description, category_id, price, image,created_at) 
+	 VALUES ($1, $2, $3, $4, $5, $6) RETURNING id AS product_id`
+	createdAt := time.Now()
+	err = c.db.Raw(query, product.Name, product.Description, product.CategoryID,
+		product.Price, product.Image, createdAt).Scan(&productID).Error
+
+	return
+}
+
+func (c *productDatabase) IsProductNameAlreadyExist(ctx context.Context, productName string) (exist bool, err error) {
+
+	query := `SELECT DISTINCT EXISTS(SELECT 1 FROM products WHERE name = $1) AS exist FROM products`
+	err = c.db.Raw(query, productName).Scan(&exist).Error
+
+	return
+}
+
+func (c *productDatabase) FindAllProducts(ctx context.Context, pagination request.Pagination) (products []response.Product, err error) {
+	fmt.Println(pagination.PageNumber, pagination.Count)
+	limit := pagination.Count
+	offset := (pagination.PageNumber - 1) * limit
+
+	query := `SELECT p.id, p.name, p.description, p.price, p.image, p.category_id, c.name AS category_name 
+	FROM products p INNER JOIN categories c ON c.id = p.category_id 
+	LIMIT $1 OFFSET  $2`
+
+	err = c.db.Raw(query, limit, offset).Scan(&products).Error
+
+	return
 }

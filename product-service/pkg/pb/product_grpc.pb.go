@@ -20,9 +20,11 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	ProductService_AddCategory_FullMethodName        = "/pb.ProductService/AddCategory"
+	ProductService_FindAllCategories_FullMethodName  = "/pb.ProductService/FindAllCategories"
 	ProductService_AddVariation_FullMethodName       = "/pb.ProductService/AddVariation"
 	ProductService_AddVariationOption_FullMethodName = "/pb.ProductService/AddVariationOption"
 	ProductService_AddProduct_FullMethodName         = "/pb.ProductService/AddProduct"
+	ProductService_FindAllProducts_FullMethodName    = "/pb.ProductService/FindAllProducts"
 )
 
 // ProductServiceClient is the client API for ProductService service.
@@ -30,9 +32,11 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProductServiceClient interface {
 	AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*AddCategoryResponse, error)
+	FindAllCategories(ctx context.Context, in *FindAllCategoriesRequest, opts ...grpc.CallOption) (*FindAllCategoriesResponse, error)
 	AddVariation(ctx context.Context, in *AddVariationRequest, opts ...grpc.CallOption) (*AddVariationResponse, error)
 	AddVariationOption(ctx context.Context, in *AddVariationOptionRequest, opts ...grpc.CallOption) (*AddVariationOptionResponse, error)
 	AddProduct(ctx context.Context, in *AddProductRequest, opts ...grpc.CallOption) (*AddProductResponse, error)
+	FindAllProducts(ctx context.Context, in *FindAllProductsRequest, opts ...grpc.CallOption) (*FindAllProductsResponse, error)
 }
 
 type productServiceClient struct {
@@ -46,6 +50,15 @@ func NewProductServiceClient(cc grpc.ClientConnInterface) ProductServiceClient {
 func (c *productServiceClient) AddCategory(ctx context.Context, in *AddCategoryRequest, opts ...grpc.CallOption) (*AddCategoryResponse, error) {
 	out := new(AddCategoryResponse)
 	err := c.cc.Invoke(ctx, ProductService_AddCategory_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productServiceClient) FindAllCategories(ctx context.Context, in *FindAllCategoriesRequest, opts ...grpc.CallOption) (*FindAllCategoriesResponse, error) {
+	out := new(FindAllCategoriesResponse)
+	err := c.cc.Invoke(ctx, ProductService_FindAllCategories_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -79,14 +92,25 @@ func (c *productServiceClient) AddProduct(ctx context.Context, in *AddProductReq
 	return out, nil
 }
 
+func (c *productServiceClient) FindAllProducts(ctx context.Context, in *FindAllProductsRequest, opts ...grpc.CallOption) (*FindAllProductsResponse, error) {
+	out := new(FindAllProductsResponse)
+	err := c.cc.Invoke(ctx, ProductService_FindAllProducts_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductServiceServer is the server API for ProductService service.
 // All implementations must embed UnimplementedProductServiceServer
 // for forward compatibility
 type ProductServiceServer interface {
 	AddCategory(context.Context, *AddCategoryRequest) (*AddCategoryResponse, error)
+	FindAllCategories(context.Context, *FindAllCategoriesRequest) (*FindAllCategoriesResponse, error)
 	AddVariation(context.Context, *AddVariationRequest) (*AddVariationResponse, error)
 	AddVariationOption(context.Context, *AddVariationOptionRequest) (*AddVariationOptionResponse, error)
 	AddProduct(context.Context, *AddProductRequest) (*AddProductResponse, error)
+	FindAllProducts(context.Context, *FindAllProductsRequest) (*FindAllProductsResponse, error)
 	mustEmbedUnimplementedProductServiceServer()
 }
 
@@ -97,6 +121,9 @@ type UnimplementedProductServiceServer struct {
 func (UnimplementedProductServiceServer) AddCategory(context.Context, *AddCategoryRequest) (*AddCategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCategory not implemented")
 }
+func (UnimplementedProductServiceServer) FindAllCategories(context.Context, *FindAllCategoriesRequest) (*FindAllCategoriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindAllCategories not implemented")
+}
 func (UnimplementedProductServiceServer) AddVariation(context.Context, *AddVariationRequest) (*AddVariationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddVariation not implemented")
 }
@@ -105,6 +132,9 @@ func (UnimplementedProductServiceServer) AddVariationOption(context.Context, *Ad
 }
 func (UnimplementedProductServiceServer) AddProduct(context.Context, *AddProductRequest) (*AddProductResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddProduct not implemented")
+}
+func (UnimplementedProductServiceServer) FindAllProducts(context.Context, *FindAllProductsRequest) (*FindAllProductsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindAllProducts not implemented")
 }
 func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
 
@@ -133,6 +163,24 @@ func _ProductService_AddCategory_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ProductServiceServer).AddCategory(ctx, req.(*AddCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductService_FindAllCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindAllCategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).FindAllCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_FindAllCategories_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).FindAllCategories(ctx, req.(*FindAllCategoriesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -191,6 +239,24 @@ func _ProductService_AddProduct_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductService_FindAllProducts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindAllProductsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).FindAllProducts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_FindAllProducts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).FindAllProducts(ctx, req.(*FindAllProductsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProductService_ServiceDesc is the grpc.ServiceDesc for ProductService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -203,6 +269,10 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ProductService_AddCategory_Handler,
 		},
 		{
+			MethodName: "FindAllCategories",
+			Handler:    _ProductService_FindAllCategories_Handler,
+		},
+		{
 			MethodName: "AddVariation",
 			Handler:    _ProductService_AddVariation_Handler,
 		},
@@ -213,6 +283,10 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddProduct",
 			Handler:    _ProductService_AddProduct_Handler,
+		},
+		{
+			MethodName: "FindAllProducts",
+			Handler:    _ProductService_FindAllProducts_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

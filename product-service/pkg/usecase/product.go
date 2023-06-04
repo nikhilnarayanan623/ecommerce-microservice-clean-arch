@@ -8,6 +8,7 @@ import (
 	repo "github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/repository/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/usecase/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils/request"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils/response"
 )
 
 type productUseCase struct {
@@ -25,7 +26,8 @@ var (
 	ErrInvalidCategoryID    = errors.New("invalid category_id")
 	ErrVariationExist       = errors.New("an variation already exist with given name")
 	ErrInvalidVariationID   = errors.New("invalid variation_id")
-	ErrVariationOptionExist = fmt.Errorf("variation option already exist with given value")
+	ErrVariationOptionExist = errors.New("variation option already exist with given value")
+	ErrProductExist         = errors.New("product already exist with given name")
 )
 
 func (c *productUseCase) AddCategory(ctx context.Context, category request.AddCategory) (uint64, error) {
@@ -103,4 +105,43 @@ func (c *productUseCase) AddVariationOption(ctx context.Context, variationOption
 	}
 
 	return variationOptionID, nil
+}
+
+func (c *productUseCase) FindAllCategories(ctx context.Context) ([]response.Category, error) {
+	categories, err := c.repo.FindAllCategories(ctx)
+	return categories, err
+}
+
+// Save Product
+func (c *productUseCase) AddProduct(ctx context.Context, product request.AddProduct) (uint64, error) {
+
+	productExist, err := c.repo.IsProductNameAlreadyExist(ctx, product.Name)
+	if err != nil {
+		return 0, fmt.Errorf("failed to check product name already exist \nerror:%w", err)
+	}
+	if productExist {
+		return 0, ErrProductExist
+	}
+
+	category, err := c.repo.FindCategoryByID(ctx, product.CategoryID)
+
+	if err != nil {
+		return 0, fmt.Errorf("failed to verify category_id \nerror:%w", err)
+	}
+	if category.ID == 0 {
+		return 0, ErrInvalidCategoryID
+	}
+
+	productID, err := c.repo.SaveProduct(ctx, product)
+	if err != nil {
+		return 0, fmt.Errorf("failed to save product \nerror:%w", err)
+	}
+	return productID, nil
+}
+
+func (c *productUseCase) FindAllProducts(ctx context.Context, pagination request.Pagination) ([]response.Product, error) {
+
+	products, err := c.repo.FindAllProducts(ctx,pagination )
+
+	return products, err
 }

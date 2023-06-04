@@ -6,9 +6,11 @@ option go_package = "./pkg/pb";
 
 service ProductService {
     rpc AddCategory(AddCategoryRequest) returns (AddCategoryResponse){};
+    rpc FindAllCategories(FindAllCategoriesRequest) returns (FindAllCategoriesResponse){};
     rpc AddVariation(AddVariationRequest) returns (AddVariationResponse){};
     rpc AddVariationOption(AddVariationOptionRequest) returns (AddVariationOptionResponse){};
     rpc AddProduct(AddProductRequest) returns (AddProductResponse){};
+    rpc FindAllProducts(FindAllProductsRequest) returns (FindAllProductsResponse){};
 }
 
 // Add category
@@ -16,9 +18,21 @@ message AddCategoryRequest{
     uint64 main_category_id = 1;
     string category_name = 2;
 }
-
 message AddCategoryResponse{
     uint64 category_id = 1;
+}
+
+message FindAllCategoriesRequest {
+
+}
+message FindAllCategoriesResponse{
+    message Categories {
+        uint64 id = 1;
+        string name = 2;
+        uint64 main_category_id = 3;
+        string main_category_name = 4;
+    }
+    repeated Categories categories = 1;
 }
 
 // Add Variation
@@ -43,7 +57,7 @@ message AddVariationOptionResponse{
 
 // Add product
 message AddProductRequest {
-    string product_name = 1;
+    string name = 1;
     string description = 2;
     uint64 category_id = 3;
     double price = 4;
@@ -51,4 +65,21 @@ message AddProductRequest {
 }
 message AddProductResponse{
    uint64 product_id = 1;
+}
+
+message FindAllProductsRequest{
+   uint64 pageNumber =1;
+   uint64 count = 2;
+}
+message  FindAllProductsResponse{
+    message Product {
+        uint64 id = 1;
+        string name = 2;
+        string description = 3;
+        double price = 4;
+        string image = 5;
+        uint64 category_id = 6;
+        string category_name = 7;
+    }
+    repeated Product products =1;
 }
