@@ -18,7 +18,7 @@ func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler, userHand
 	engine := gin.New()
 	engine.Use(gin.Logger())
 
-	routes.SetupUserRoutes(engine.Group("/"), authHandler, userHandler)
+	routes.SetupUserRoutes(engine.Group("/"), authHandler, userHandler, productHandler)
 	routes.SetupAdminRoutes(engine.Group("/admin"), productHandler)
 
 	return &Server{
