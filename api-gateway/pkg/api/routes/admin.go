@@ -5,16 +5,16 @@ import (
 	handler "github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/api/handler/interfaces"
 )
 
-func SetupAdminRoutes(engine *gin.Engine, productHandler handler.ProductHandler) {
+func SetupAdminRoutes(admin *gin.RouterGroup, productHandler handler.ProductHandler) {
 
-	engine.POST("/category", productHandler.AddCategory)
-	engine.GET("/category", productHandler.FindAllCategories)
-	engine.POST("/variation", productHandler.AddVariation)
-	engine.POST("/variation/option", productHandler.AddVariationOption)
+	admin.POST("/category", productHandler.AddCategory)
+	admin.GET("/category", productHandler.FindAllCategories)
+	admin.POST("/variation", productHandler.AddVariation)
+	admin.POST("/variation/option", productHandler.AddVariationOption)
 
-	engine.POST("/product", productHandler.AddProduct)
-	engine.GET("/product", productHandler.FindAllProducts)
+	admin.POST("/product", productHandler.AddProduct)
+	admin.GET("/product", productHandler.FindAllProducts)
 
-	engine.POST("/product/item", productHandler.AddProductItem)
-	engine.GET("/product/item/:product_id", productHandler.FindAllProductItems)
+	admin.POST("/product/item", productHandler.AddProductItem)
+	admin.GET("/product/item/:product_id", productHandler.FindAllProductItems)
 }

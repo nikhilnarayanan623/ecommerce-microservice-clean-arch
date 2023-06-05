@@ -38,7 +38,7 @@ func (c *authClient) UserSignup(ctx context.Context, req domain.UserSignupReques
 		Age:       req.Age,
 		Email:     req.Email,
 		Phone:     req.Phone,
-		Passord:   req.Password,
+		Password:  req.Password,
 	})
 	if err != nil {
 		return otpID, err
@@ -77,6 +77,19 @@ func (c *authClient) UserLogin(ctx context.Context, loginDetails domain.UserLogi
 		AccessToken:  res.GetAccessToken(),
 		RefreshToken: res.GetRefreshToken(),
 	}, nil
+}
+
+func (c *authClient) VerifyUserAccessToken(ctx context.Context, accessToken string) (userID uint64, err error) {
+
+	res, err := c.client.VerifyUserAccessToken(ctx, &pb.VerifyUserAccessTokenRequest{
+		AccessToken: accessToken,
+	})
+
+	if err != nil {
+		return 0, err
+	}
+
+	return res.GetUserId(), nil
 }
 
 // Refresh access token for user using refresh token
