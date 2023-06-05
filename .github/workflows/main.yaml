@@ -26,7 +26,8 @@ jobs:
           go mod tidy
           go mod verify
       
-      - name: Run Test
+      - name: test api-gateway
         run: |
+          cd api-gateway
           go test -v -cover ./...
     
