@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/domain"
@@ -20,6 +19,24 @@ func NewProductRepository(db *gorm.DB) interfaces.ProductRepository {
 	return &productDatabase{
 		db: db,
 	}
+}
+
+func (c *productDatabase) Transactions(ctx context.Context, trxFn func(repo interfaces.ProductRepository) error) error {
+
+	trx := c.db.Begin()
+
+	repo := NewProductRepository(trx)
+
+	if err := trxFn(repo); err != nil {
+		trx.Rollback()
+		return err
+	}
+
+	if err := trx.Commit().Error; err != nil {
+		trx.Rollback()
+		return err
+	}
+	return nil
 }
 
 func (c *productDatabase) SaveCategory(ctx context.Context, category request.AddCategory) (categoryID uint64, err error) {
@@ -105,13 +122,22 @@ func (c *productDatabase) FindVariationOptionByValue(ctx context.Context, variat
 
 	return variationOption, err
 }
-func (c *productDatabase) FindVariationOptionByID(ctx context.Context, variationOptionID uint64) (domain.VariationOption, error) {
 
-	var variationOption domain.VariationOption
-	query := `SELECT id, variation_id, value FROM variation_options WHERE id = $1`
-	err := c.db.Raw(query, variationOptionID).Scan(&variationOption).Error
+// func (c *productDatabase) FindVariationOptionByID(ctx context.Context, variationOptionID uint64) (domain.VariationOption, error) {
 
-	return variationOption, err
+// 	var variationOption domain.VariationOption
+// 	query := `SELECT id, variation_id, value FROM variation_options WHERE id = $1`
+// 	err := c.db.Raw(query, variationOptionID).Scan(&variationOption).Error
+
+// 	return variationOption, err
+// }
+
+func (c *productDatabase) IsValidVariationOptionID(ctx context.Context, variationOptionID uint64) (valid bool, err error) {
+
+	query := `SELECT EXISTS(SELECT 1) AS valid FROM variation_options WHERE id = $1`
+	err = c.db.Raw(query, variationOptionID).Scan(&valid).Error
+
+	return
 }
 
 func (c *productDatabase) SaveProduct(ctx context.Context, product request.AddProduct) (productID uint64, err error) {
@@ -125,16 +151,16 @@ func (c *productDatabase) SaveProduct(ctx context.Context, product request.AddPr
 	return
 }
 
-func (c *productDatabase) IsProductNameAlreadyExist(ctx context.Context, productName string) (exist bool, err error) {
+func (c *productDatabase) IsValidProductID(ctx context.Context, productID uint64) (valid bool, err error) {
 
-	query := `SELECT DISTINCT EXISTS(SELECT 1 FROM products WHERE name = $1) AS exist FROM products`
-	err = c.db.Raw(query, productName).Scan(&exist).Error
+	query := `SELECT EXISTS(SELECT 1) AS valid FROM products WHERE id = $1`
+	err = c.db.Raw(query, productID).Scan(&valid).Error
 
 	return
 }
 
 func (c *productDatabase) FindAllProducts(ctx context.Context, pagination request.Pagination) (products []response.Product, err error) {
-	fmt.Println(pagination.PageNumber, pagination.Count)
+
 	limit := pagination.Count
 	offset := (pagination.PageNumber - 1) * limit
 
@@ -143,6 +169,55 @@ func (c *productDatabase) FindAllProducts(ctx context.Context, pagination reques
 	LIMIT $1 OFFSET  $2`
 
 	err = c.db.Raw(query, limit, offset).Scan(&products).Error
+
+	return
+}
+func (c *productDatabase) IsProductNameAlreadyExist(ctx context.Context, productName string) (exist bool, err error) {
+
+	query := `SELECT DISTINCT EXISTS(SELECT 1 FROM products WHERE name = $1) AS exist FROM products`
+	err = c.db.Raw(query, productName).Scan(&exist).Error
+
+	return
+}
+
+func (c *productDatabase) SaveProductItem(ctx context.Context, productItem request.AddProductItem) (productItemID uint64, err error) {
+
+	query := `INSERT INTO product_items (product_id, qty_in_stock, price, sku,created_at) VALUES($1, $2, $3, $4, $5) 
+	 RETURNING id AS product_item_id`
+	createdAt := time.Now()
+	err = c.db.Raw(query, productItem.ProductID, productItem.QtyInStock, productItem.Price, productItem.SKU, createdAt).
+		Scan(&productItemID).Error
+
+	return
+}
+
+func (c *productDatabase) SaveProductConfiguration(ctx context.Context, productItemID, variationOptionID uint64) error {
+
+	query := `INSERT INTO product_configurations (product_item_id, variation_option_id) VALUES ($1, $2)`
+	err := c.db.Exec(query, productItemID, variationOptionID).Error
+
+	return err
+}
+
+func (c *productDatabase) FindProductItemsByProductID(ctx context.Context, productID uint64) (productItems []response.ProductItem, err error) {
+
+	query := `SELECT pi.id, pi.price, pi.qty_in_stock, pi.sku, 
+	pi.discount_price, p.name, vo.value AS variation_value  FROM product_items pi 
+	INNER JOIN products p ON pi.product_id = p.id 
+	INNER JOIN product_configurations pc ON pi.id = pc.product_item_id  
+	INNER JOIN variation_options vo ON pc.variation_option_id = vo.id 
+	WHERE pi.product_id = $1`
+	err = c.db.Raw(query, productID).Scan(&productItems).Error
+
+	return
+}
+
+func (c *productDatabase) IsProductItemAlreadyExist(ctx context.Context, productID, variationOptionID uint64) (exist bool, err error) {
+
+	query := `SELECT CASE WHEN id != 0 THEN 'T' ELSE 'F' END AS exist FROM product_items pi 
+	WHERE id = ( SELECT product_item_id FROM product_configurations WHERE variation_option_id = $1 )                        
+	AND pi.product_id = $2`
+	err = c.db.Raw(query, variationOptionID, productID).Scan(&exist).Error
 
 	return
 }

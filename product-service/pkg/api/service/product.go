@@ -168,3 +168,58 @@ func (c *productServiceServer) FindAllProducts(ctx context.Context, req *pb.Find
 	return &pb.FindAllProductsResponse{Products: outputProducts}, nil
 
 }
+
+func (c *productServiceServer) AddProductItem(ctx context.Context, req *pb.AddProductItemRequest) (*pb.AddProductItemResponse, error) {
+
+	productItemID, err := c.usecase.AddProductItem(ctx, request.AddProductItem{
+		ProductID:         req.GetProductId(),
+		QtyInStock:        req.GetQtyInStock(),
+		Price:             req.GetPrice(),
+		VariationOptionID: req.GetVariationOptionId(),
+	})
+
+	if err != nil {
+		var errCode codes.Code
+
+		switch err {
+		case usecase.ErrInvalidProductID, usecase.ErrInvalidVariationOptionID:
+			errCode = codes.InvalidArgument
+		case usecase.ErrProductItemExist:
+			errCode = codes.AlreadyExists
+		default:
+			errCode = codes.Internal
+		}
+
+		return nil, status.Error(errCode, err.Error())
+	}
+
+	return &pb.AddProductItemResponse{ProductItemId: productItemID}, nil
+}
+
+func (c *productServiceServer) FindAllProductItems(ctx context.Context, req *pb.FindAllProductItemsRequest) (*pb.FindAllProductItemsResponse, error) {
+
+	productItems, err := c.usecase.FindAllProductItems(ctx, req.GetProductId())
+	if err != nil {
+		errCode := codes.Internal
+		if err == usecase.ErrInvalidProductID {
+			errCode = codes.InvalidArgument
+		}
+		return nil, status.Error(errCode, err.Error())
+	}
+
+	outputProductItems := make([]*pb.FindAllProductItemsResponse_ProductItem, len(productItems))
+
+	for i, productItem := range productItems {
+		outputProductItems[i] = &pb.FindAllProductItemsResponse_ProductItem{
+			Id:             productItem.ID,
+			Name:           productItem.Name,
+			Price:          productItem.Price,
+			QtyInStock:     productItem.QtyInStock,
+			Sku:            productItem.SKU,
+			DiscountPrice:  productItem.DiscountPrice,
+			VariationValue: productItem.VariationValue,
+		}
+	}
+
+	return &pb.FindAllProductItemsResponse{ProductItems: outputProductItems}, nil
+}

@@ -9,6 +9,8 @@ import (
 )
 
 type ProductRepository interface {
+	Transactions(ctx context.Context, trxFn func(repo ProductRepository) error) error
+
 	SaveCategory(ctx context.Context, category request.AddCategory) (categoryID uint64, err error)
 	FindCategoryByName(ctx context.Context, categoryName string) (domain.Category, error)
 	FindCategoryByID(ctx context.Context, categoryID uint64) (domain.Category, error)
@@ -20,9 +22,16 @@ type ProductRepository interface {
 
 	SaveVariationOption(ctx context.Context, variationOption request.AddVariationOption) (variationOptionID uint64, err error)
 	FindVariationOptionByValue(ctx context.Context, variationValue string) (domain.VariationOption, error)
-	FindVariationOptionByID(ctx context.Context, variationOptionID uint64) (domain.VariationOption, error)
+	//FindVariationOptionByID(ctx context.Context, variationOptionID uint64) (domain.VariationOption, error)
+	IsValidVariationOptionID(ctx context.Context, variationOptionID uint64) (valid bool, err error)
 
 	SaveProduct(ctx context.Context, product request.AddProduct) (productID uint64, err error)
 	IsProductNameAlreadyExist(ctx context.Context, productName string) (exist bool, err error)
+	IsValidProductID(ctx context.Context, productID uint64) (valid bool, err error)
 	FindAllProducts(ctx context.Context, pagination request.Pagination) ([]response.Product, error)
+
+	SaveProductItem(ctx context.Context, productItem request.AddProductItem) (productItemID uint64, err error)
+	FindProductItemsByProductID(ctx context.Context, productID uint64) (productItems []response.ProductItem, err error)
+	IsProductItemAlreadyExist(ctx context.Context, productID, variationOptionID uint64) (exist bool, err error)
+	SaveProductConfiguration(ctx context.Context, productItemID, variationOptionID uint64) error
 }

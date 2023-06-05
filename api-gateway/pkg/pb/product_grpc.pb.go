@@ -19,12 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ProductService_AddCategory_FullMethodName        = "/pb.ProductService/AddCategory"
-	ProductService_FindAllCategories_FullMethodName  = "/pb.ProductService/FindAllCategories"
-	ProductService_AddVariation_FullMethodName       = "/pb.ProductService/AddVariation"
-	ProductService_AddVariationOption_FullMethodName = "/pb.ProductService/AddVariationOption"
-	ProductService_AddProduct_FullMethodName         = "/pb.ProductService/AddProduct"
-	ProductService_FindAllProducts_FullMethodName    = "/pb.ProductService/FindAllProducts"
+	ProductService_AddCategory_FullMethodName         = "/pb.ProductService/AddCategory"
+	ProductService_FindAllCategories_FullMethodName   = "/pb.ProductService/FindAllCategories"
+	ProductService_AddVariation_FullMethodName        = "/pb.ProductService/AddVariation"
+	ProductService_AddVariationOption_FullMethodName  = "/pb.ProductService/AddVariationOption"
+	ProductService_AddProduct_FullMethodName          = "/pb.ProductService/AddProduct"
+	ProductService_FindAllProducts_FullMethodName     = "/pb.ProductService/FindAllProducts"
+	ProductService_AddProductItem_FullMethodName      = "/pb.ProductService/AddProductItem"
+	ProductService_FindAllProductItems_FullMethodName = "/pb.ProductService/FindAllProductItems"
 )
 
 // ProductServiceClient is the client API for ProductService service.
@@ -37,6 +39,8 @@ type ProductServiceClient interface {
 	AddVariationOption(ctx context.Context, in *AddVariationOptionRequest, opts ...grpc.CallOption) (*AddVariationOptionResponse, error)
 	AddProduct(ctx context.Context, in *AddProductRequest, opts ...grpc.CallOption) (*AddProductResponse, error)
 	FindAllProducts(ctx context.Context, in *FindAllProductsRequest, opts ...grpc.CallOption) (*FindAllProductsResponse, error)
+	AddProductItem(ctx context.Context, in *AddProductItemRequest, opts ...grpc.CallOption) (*AddProductItemResponse, error)
+	FindAllProductItems(ctx context.Context, in *FindAllProductItemsRequest, opts ...grpc.CallOption) (*FindAllProductItemsResponse, error)
 }
 
 type productServiceClient struct {
@@ -101,6 +105,24 @@ func (c *productServiceClient) FindAllProducts(ctx context.Context, in *FindAllP
 	return out, nil
 }
 
+func (c *productServiceClient) AddProductItem(ctx context.Context, in *AddProductItemRequest, opts ...grpc.CallOption) (*AddProductItemResponse, error) {
+	out := new(AddProductItemResponse)
+	err := c.cc.Invoke(ctx, ProductService_AddProductItem_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *productServiceClient) FindAllProductItems(ctx context.Context, in *FindAllProductItemsRequest, opts ...grpc.CallOption) (*FindAllProductItemsResponse, error) {
+	out := new(FindAllProductItemsResponse)
+	err := c.cc.Invoke(ctx, ProductService_FindAllProductItems_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductServiceServer is the server API for ProductService service.
 // All implementations must embed UnimplementedProductServiceServer
 // for forward compatibility
@@ -111,6 +133,8 @@ type ProductServiceServer interface {
 	AddVariationOption(context.Context, *AddVariationOptionRequest) (*AddVariationOptionResponse, error)
 	AddProduct(context.Context, *AddProductRequest) (*AddProductResponse, error)
 	FindAllProducts(context.Context, *FindAllProductsRequest) (*FindAllProductsResponse, error)
+	AddProductItem(context.Context, *AddProductItemRequest) (*AddProductItemResponse, error)
+	FindAllProductItems(context.Context, *FindAllProductItemsRequest) (*FindAllProductItemsResponse, error)
 	mustEmbedUnimplementedProductServiceServer()
 }
 
@@ -135,6 +159,12 @@ func (UnimplementedProductServiceServer) AddProduct(context.Context, *AddProduct
 }
 func (UnimplementedProductServiceServer) FindAllProducts(context.Context, *FindAllProductsRequest) (*FindAllProductsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindAllProducts not implemented")
+}
+func (UnimplementedProductServiceServer) AddProductItem(context.Context, *AddProductItemRequest) (*AddProductItemResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddProductItem not implemented")
+}
+func (UnimplementedProductServiceServer) FindAllProductItems(context.Context, *FindAllProductItemsRequest) (*FindAllProductItemsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindAllProductItems not implemented")
 }
 func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
 
@@ -257,6 +287,42 @@ func _ProductService_FindAllProducts_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductService_AddProductItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddProductItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).AddProductItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_AddProductItem_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).AddProductItem(ctx, req.(*AddProductItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProductService_FindAllProductItems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindAllProductItemsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).FindAllProductItems(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_FindAllProductItems_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).FindAllProductItems(ctx, req.(*FindAllProductItemsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProductService_ServiceDesc is the grpc.ServiceDesc for ProductService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -287,6 +353,14 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FindAllProducts",
 			Handler:    _ProductService_FindAllProducts_Handler,
+		},
+		{
+			MethodName: "AddProductItem",
+			Handler:    _ProductService_AddProductItem_Handler,
+		},
+		{
+			MethodName: "FindAllProductItems",
+			Handler:    _ProductService_FindAllProductItems_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

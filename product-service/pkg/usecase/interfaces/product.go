@@ -16,4 +16,7 @@ type ProductUseCase interface {
 
 	AddProduct(ctx context.Context, product request.AddProduct) (productID uint64, err error)
 	FindAllProducts(ctx context.Context, pagination request.Pagination) ([]response.Product, error)
+
+	AddProductItem(ctx context.Context, productItems request.AddProductItem) (productItemID uint64, err error)
+	FindAllProductItems(ctx context.Context, productID uint64) ([]response.ProductItem, error)
 }

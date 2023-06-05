@@ -49,14 +49,12 @@ func getErrorCode(err error) int {
 	var httpCode int
 
 	switch status.Code(err) {
-	case codes.InvalidArgument:
-		httpCode = http.StatusBadRequest
 	case codes.AlreadyExists:
 		httpCode = http.StatusConflict
 	case codes.Internal:
 		httpCode = http.StatusInternalServerError
 	default:
-		httpCode = http.StatusServiceUnavailable
+		httpCode = http.StatusBadRequest
 	}
 	return httpCode
 }
