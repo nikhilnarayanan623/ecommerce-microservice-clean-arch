@@ -643,6 +643,219 @@ func (x *FindAllProductsResponse) GetProducts() []*FindAllProductsResponse_Produ
 	return nil
 }
 
+// Product Item
+type AddProductItemRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ProductId         uint64  `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	QtyInStock        uint64  `protobuf:"varint,2,opt,name=qty_in_stock,json=qtyInStock,proto3" json:"qty_in_stock,omitempty"`
+	Price             float64 `protobuf:"fixed64,3,opt,name=price,proto3" json:"price,omitempty"`
+	VariationOptionId uint64  `protobuf:"varint,4,opt,name=variation_option_id,json=variationOptionId,proto3" json:"variation_option_id,omitempty"`
+}
+
+func (x *AddProductItemRequest) Reset() {
+	*x = AddProductItemRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pkg_proto_product_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddProductItemRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddProductItemRequest) ProtoMessage() {}
+
+func (x *AddProductItemRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_pkg_proto_product_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddProductItemRequest.ProtoReflect.Descriptor instead.
+func (*AddProductItemRequest) Descriptor() ([]byte, []int) {
+	return file_pkg_proto_product_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *AddProductItemRequest) GetProductId() uint64 {
+	if x != nil {
+		return x.ProductId
+	}
+	return 0
+}
+
+func (x *AddProductItemRequest) GetQtyInStock() uint64 {
+	if x != nil {
+		return x.QtyInStock
+	}
+	return 0
+}
+
+func (x *AddProductItemRequest) GetPrice() float64 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *AddProductItemRequest) GetVariationOptionId() uint64 {
+	if x != nil {
+		return x.VariationOptionId
+	}
+	return 0
+}
+
+type AddProductItemResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ProductItemId uint64 `protobuf:"varint,1,opt,name=product_item_id,json=productItemId,proto3" json:"product_item_id,omitempty"`
+}
+
+func (x *AddProductItemResponse) Reset() {
+	*x = AddProductItemResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pkg_proto_product_proto_msgTypes[13]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *AddProductItemResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddProductItemResponse) ProtoMessage() {}
+
+func (x *AddProductItemResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_pkg_proto_product_proto_msgTypes[13]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddProductItemResponse.ProtoReflect.Descriptor instead.
+func (*AddProductItemResponse) Descriptor() ([]byte, []int) {
+	return file_pkg_proto_product_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *AddProductItemResponse) GetProductItemId() uint64 {
+	if x != nil {
+		return x.ProductItemId
+	}
+	return 0
+}
+
+type FindAllProductItemsRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ProductId uint64 `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+}
+
+func (x *FindAllProductItemsRequest) Reset() {
+	*x = FindAllProductItemsRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pkg_proto_product_proto_msgTypes[14]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *FindAllProductItemsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FindAllProductItemsRequest) ProtoMessage() {}
+
+func (x *FindAllProductItemsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_pkg_proto_product_proto_msgTypes[14]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FindAllProductItemsRequest.ProtoReflect.Descriptor instead.
+func (*FindAllProductItemsRequest) Descriptor() ([]byte, []int) {
+	return file_pkg_proto_product_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *FindAllProductItemsRequest) GetProductId() uint64 {
+	if x != nil {
+		return x.ProductId
+	}
+	return 0
+}
+
+type FindAllProductItemsResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ProductItems []*FindAllProductItemsResponse_ProductItem `protobuf:"bytes,1,rep,name=product_items,json=productItems,proto3" json:"product_items,omitempty"`
+}
+
+func (x *FindAllProductItemsResponse) Reset() {
+	*x = FindAllProductItemsResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pkg_proto_product_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *FindAllProductItemsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FindAllProductItemsResponse) ProtoMessage() {}
+
+func (x *FindAllProductItemsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_pkg_proto_product_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FindAllProductItemsResponse.ProtoReflect.Descriptor instead.
+func (*FindAllProductItemsResponse) Descriptor() ([]byte, []int) {
+	return file_pkg_proto_product_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *FindAllProductItemsResponse) GetProductItems() []*FindAllProductItemsResponse_ProductItem {
+	if x != nil {
+		return x.ProductItems
+	}
+	return nil
+}
+
 type FindAllCategoriesResponse_Categories struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -657,7 +870,7 @@ type FindAllCategoriesResponse_Categories struct {
 func (x *FindAllCategoriesResponse_Categories) Reset() {
 	*x = FindAllCategoriesResponse_Categories{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_pkg_proto_product_proto_msgTypes[12]
+		mi := &file_pkg_proto_product_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -670,7 +883,7 @@ func (x *FindAllCategoriesResponse_Categories) String() string {
 func (*FindAllCategoriesResponse_Categories) ProtoMessage() {}
 
 func (x *FindAllCategoriesResponse_Categories) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_product_proto_msgTypes[12]
+	mi := &file_pkg_proto_product_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -731,7 +944,7 @@ type FindAllProductsResponse_Product struct {
 func (x *FindAllProductsResponse_Product) Reset() {
 	*x = FindAllProductsResponse_Product{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_pkg_proto_product_proto_msgTypes[13]
+		mi := &file_pkg_proto_product_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -744,7 +957,7 @@ func (x *FindAllProductsResponse_Product) String() string {
 func (*FindAllProductsResponse_Product) ProtoMessage() {}
 
 func (x *FindAllProductsResponse_Product) ProtoReflect() protoreflect.Message {
-	mi := &file_pkg_proto_product_proto_msgTypes[13]
+	mi := &file_pkg_proto_product_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -805,6 +1018,101 @@ func (x *FindAllProductsResponse_Product) GetCategoryId() uint64 {
 func (x *FindAllProductsResponse_Product) GetCategoryName() string {
 	if x != nil {
 		return x.CategoryName
+	}
+	return ""
+}
+
+type FindAllProductItemsResponse_ProductItem struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id             uint64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name           string  `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Price          float64 `protobuf:"fixed64,3,opt,name=price,proto3" json:"price,omitempty"`
+	QtyInStock     uint64  `protobuf:"varint,4,opt,name=qty_in_stock,json=qtyInStock,proto3" json:"qty_in_stock,omitempty"`
+	Sku            string  `protobuf:"bytes,5,opt,name=sku,proto3" json:"sku,omitempty"`
+	DiscountPrice  uint64  `protobuf:"varint,6,opt,name=discount_price,json=discountPrice,proto3" json:"discount_price,omitempty"`
+	VariationValue string  `protobuf:"bytes,7,opt,name=variation_value,json=variationValue,proto3" json:"variation_value,omitempty"`
+}
+
+func (x *FindAllProductItemsResponse_ProductItem) Reset() {
+	*x = FindAllProductItemsResponse_ProductItem{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_pkg_proto_product_proto_msgTypes[18]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *FindAllProductItemsResponse_ProductItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FindAllProductItemsResponse_ProductItem) ProtoMessage() {}
+
+func (x *FindAllProductItemsResponse_ProductItem) ProtoReflect() protoreflect.Message {
+	mi := &file_pkg_proto_product_proto_msgTypes[18]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FindAllProductItemsResponse_ProductItem.ProtoReflect.Descriptor instead.
+func (*FindAllProductItemsResponse_ProductItem) Descriptor() ([]byte, []int) {
+	return file_pkg_proto_product_proto_rawDescGZIP(), []int{15, 0}
+}
+
+func (x *FindAllProductItemsResponse_ProductItem) GetId() uint64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *FindAllProductItemsResponse_ProductItem) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *FindAllProductItemsResponse_ProductItem) GetPrice() float64 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *FindAllProductItemsResponse_ProductItem) GetQtyInStock() uint64 {
+	if x != nil {
+		return x.QtyInStock
+	}
+	return 0
+}
+
+func (x *FindAllProductItemsResponse_ProductItem) GetSku() string {
+	if x != nil {
+		return x.Sku
+	}
+	return ""
+}
+
+func (x *FindAllProductItemsResponse_ProductItem) GetDiscountPrice() uint64 {
+	if x != nil {
+		return x.DiscountPrice
+	}
+	return 0
+}
+
+func (x *FindAllProductItemsResponse_ProductItem) GetVariationValue() string {
+	if x != nil {
+		return x.VariationValue
 	}
 	return ""
 }
@@ -897,7 +1205,45 @@ var file_pkg_proto_product_proto_rawDesc = []byte{
 	0x69, 0x64, 0x18, 0x06, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0a, 0x63, 0x61, 0x74, 0x65, 0x67, 0x6f,
 	0x72, 0x79, 0x49, 0x64, 0x12, 0x23, 0x0a, 0x0d, 0x63, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79,
 	0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x63, 0x61, 0x74,
-	0x65, 0x67, 0x6f, 0x72, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x32, 0xcf, 0x03, 0x0a, 0x0e, 0x50, 0x72,
+	0x65, 0x67, 0x6f, 0x72, 0x79, 0x4e, 0x61, 0x6d, 0x65, 0x22, 0x9e, 0x01, 0x0a, 0x15, 0x41, 0x64,
+	0x64, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x70, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x5f, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09, 0x70, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74,
+	0x49, 0x64, 0x12, 0x20, 0x0a, 0x0c, 0x71, 0x74, 0x79, 0x5f, 0x69, 0x6e, 0x5f, 0x73, 0x74, 0x6f,
+	0x63, 0x6b, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0a, 0x71, 0x74, 0x79, 0x49, 0x6e, 0x53,
+	0x74, 0x6f, 0x63, 0x6b, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x01, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x12, 0x2e, 0x0a, 0x13, 0x76, 0x61,
+	0x72, 0x69, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x69,
+	0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x04, 0x52, 0x11, 0x76, 0x61, 0x72, 0x69, 0x61, 0x74, 0x69,
+	0x6f, 0x6e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x22, 0x40, 0x0a, 0x16, 0x41, 0x64,
+	0x64, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x26, 0x0a, 0x0f, 0x70, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x5f,
+	0x69, 0x74, 0x65, 0x6d, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0d, 0x70,
+	0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x49, 0x64, 0x22, 0x3b, 0x0a, 0x1a,
+	0x46, 0x69, 0x6e, 0x64, 0x41, 0x6c, 0x6c, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74,
+	0x65, 0x6d, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x70, 0x72,
+	0x6f, 0x64, 0x75, 0x63, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x09,
+	0x70, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x64, 0x22, 0xbd, 0x02, 0x0a, 0x1b, 0x46, 0x69,
+	0x6e, 0x64, 0x41, 0x6c, 0x6c, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d,
+	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x50, 0x0a, 0x0d, 0x70, 0x72, 0x6f,
+	0x64, 0x75, 0x63, 0x74, 0x5f, 0x69, 0x74, 0x65, 0x6d, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x2b, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x69, 0x6e, 0x64, 0x41, 0x6c, 0x6c, 0x50, 0x72, 0x6f,
+	0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x2e, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x0c, 0x70,
+	0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x1a, 0xcb, 0x01, 0x0a, 0x0b,
+	0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x12, 0x0e, 0x0a, 0x02, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e,
+	0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12,
+	0x14, 0x0a, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05,
+	0x70, 0x72, 0x69, 0x63, 0x65, 0x12, 0x20, 0x0a, 0x0c, 0x71, 0x74, 0x79, 0x5f, 0x69, 0x6e, 0x5f,
+	0x73, 0x74, 0x6f, 0x63, 0x6b, 0x18, 0x04, 0x20, 0x01, 0x28, 0x04, 0x52, 0x0a, 0x71, 0x74, 0x79,
+	0x49, 0x6e, 0x53, 0x74, 0x6f, 0x63, 0x6b, 0x12, 0x10, 0x0a, 0x03, 0x73, 0x6b, 0x75, 0x18, 0x05,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x73, 0x6b, 0x75, 0x12, 0x25, 0x0a, 0x0e, 0x64, 0x69, 0x73,
+	0x63, 0x6f, 0x75, 0x6e, 0x74, 0x5f, 0x70, 0x72, 0x69, 0x63, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28,
+	0x04, 0x52, 0x0d, 0x64, 0x69, 0x73, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x50, 0x72, 0x69, 0x63, 0x65,
+	0x12, 0x27, 0x0a, 0x0f, 0x76, 0x61, 0x72, 0x69, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x76, 0x61,
+	0x6c, 0x75, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x76, 0x61, 0x72, 0x69, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x32, 0xf4, 0x04, 0x0a, 0x0e, 0x50, 0x72,
 	0x6f, 0x64, 0x75, 0x63, 0x74, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x40, 0x0a, 0x0b,
 	0x41, 0x64, 0x64, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x12, 0x16, 0x2e, 0x70, 0x62,
 	0x2e, 0x41, 0x64, 0x64, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75,
@@ -926,8 +1272,19 @@ var file_pkg_proto_product_proto_rawDesc = []byte{
 	0x12, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x46, 0x69, 0x6e, 0x64, 0x41, 0x6c, 0x6c, 0x50, 0x72, 0x6f,
 	0x64, 0x75, 0x63, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b, 0x2e, 0x70,
 	0x62, 0x2e, 0x46, 0x69, 0x6e, 0x64, 0x41, 0x6c, 0x6c, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74,
-	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x0a, 0x5a, 0x08, 0x2e,
-	0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x49, 0x0a, 0x0e, 0x41,
+	0x64, 0x64, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x12, 0x19, 0x2e,
+	0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65,
+	0x6d, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64,
+	0x64, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x58, 0x0a, 0x13, 0x46, 0x69, 0x6e, 0x64, 0x41, 0x6c,
+	0x6c, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x12, 0x1e, 0x2e,
+	0x70, 0x62, 0x2e, 0x46, 0x69, 0x6e, 0x64, 0x41, 0x6c, 0x6c, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63,
+	0x74, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1f, 0x2e,
+	0x70, 0x62, 0x2e, 0x46, 0x69, 0x6e, 0x64, 0x41, 0x6c, 0x6c, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63,
+	0x74, 0x49, 0x74, 0x65, 0x6d, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00,
+	0x42, 0x0a, 0x5a, 0x08, 0x2e, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -942,43 +1299,53 @@ func file_pkg_proto_product_proto_rawDescGZIP() []byte {
 	return file_pkg_proto_product_proto_rawDescData
 }
 
-var file_pkg_proto_product_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_pkg_proto_product_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_pkg_proto_product_proto_goTypes = []interface{}{
-	(*AddCategoryRequest)(nil),                   // 0: pb.AddCategoryRequest
-	(*AddCategoryResponse)(nil),                  // 1: pb.AddCategoryResponse
-	(*FindAllCategoriesRequest)(nil),             // 2: pb.FindAllCategoriesRequest
-	(*FindAllCategoriesResponse)(nil),            // 3: pb.FindAllCategoriesResponse
-	(*AddVariationRequest)(nil),                  // 4: pb.AddVariationRequest
-	(*AddVariationResponse)(nil),                 // 5: pb.AddVariationResponse
-	(*AddVariationOptionRequest)(nil),            // 6: pb.AddVariationOptionRequest
-	(*AddVariationOptionResponse)(nil),           // 7: pb.AddVariationOptionResponse
-	(*AddProductRequest)(nil),                    // 8: pb.AddProductRequest
-	(*AddProductResponse)(nil),                   // 9: pb.AddProductResponse
-	(*FindAllProductsRequest)(nil),               // 10: pb.FindAllProductsRequest
-	(*FindAllProductsResponse)(nil),              // 11: pb.FindAllProductsResponse
-	(*FindAllCategoriesResponse_Categories)(nil), // 12: pb.FindAllCategoriesResponse.Categories
-	(*FindAllProductsResponse_Product)(nil),      // 13: pb.FindAllProductsResponse.Product
+	(*AddCategoryRequest)(nil),                      // 0: pb.AddCategoryRequest
+	(*AddCategoryResponse)(nil),                     // 1: pb.AddCategoryResponse
+	(*FindAllCategoriesRequest)(nil),                // 2: pb.FindAllCategoriesRequest
+	(*FindAllCategoriesResponse)(nil),               // 3: pb.FindAllCategoriesResponse
+	(*AddVariationRequest)(nil),                     // 4: pb.AddVariationRequest
+	(*AddVariationResponse)(nil),                    // 5: pb.AddVariationResponse
+	(*AddVariationOptionRequest)(nil),               // 6: pb.AddVariationOptionRequest
+	(*AddVariationOptionResponse)(nil),              // 7: pb.AddVariationOptionResponse
+	(*AddProductRequest)(nil),                       // 8: pb.AddProductRequest
+	(*AddProductResponse)(nil),                      // 9: pb.AddProductResponse
+	(*FindAllProductsRequest)(nil),                  // 10: pb.FindAllProductsRequest
+	(*FindAllProductsResponse)(nil),                 // 11: pb.FindAllProductsResponse
+	(*AddProductItemRequest)(nil),                   // 12: pb.AddProductItemRequest
+	(*AddProductItemResponse)(nil),                  // 13: pb.AddProductItemResponse
+	(*FindAllProductItemsRequest)(nil),              // 14: pb.FindAllProductItemsRequest
+	(*FindAllProductItemsResponse)(nil),             // 15: pb.FindAllProductItemsResponse
+	(*FindAllCategoriesResponse_Categories)(nil),    // 16: pb.FindAllCategoriesResponse.Categories
+	(*FindAllProductsResponse_Product)(nil),         // 17: pb.FindAllProductsResponse.Product
+	(*FindAllProductItemsResponse_ProductItem)(nil), // 18: pb.FindAllProductItemsResponse.ProductItem
 }
 var file_pkg_proto_product_proto_depIdxs = []int32{
-	12, // 0: pb.FindAllCategoriesResponse.categories:type_name -> pb.FindAllCategoriesResponse.Categories
-	13, // 1: pb.FindAllProductsResponse.products:type_name -> pb.FindAllProductsResponse.Product
-	0,  // 2: pb.ProductService.AddCategory:input_type -> pb.AddCategoryRequest
-	2,  // 3: pb.ProductService.FindAllCategories:input_type -> pb.FindAllCategoriesRequest
-	4,  // 4: pb.ProductService.AddVariation:input_type -> pb.AddVariationRequest
-	6,  // 5: pb.ProductService.AddVariationOption:input_type -> pb.AddVariationOptionRequest
-	8,  // 6: pb.ProductService.AddProduct:input_type -> pb.AddProductRequest
-	10, // 7: pb.ProductService.FindAllProducts:input_type -> pb.FindAllProductsRequest
-	1,  // 8: pb.ProductService.AddCategory:output_type -> pb.AddCategoryResponse
-	3,  // 9: pb.ProductService.FindAllCategories:output_type -> pb.FindAllCategoriesResponse
-	5,  // 10: pb.ProductService.AddVariation:output_type -> pb.AddVariationResponse
-	7,  // 11: pb.ProductService.AddVariationOption:output_type -> pb.AddVariationOptionResponse
-	9,  // 12: pb.ProductService.AddProduct:output_type -> pb.AddProductResponse
-	11, // 13: pb.ProductService.FindAllProducts:output_type -> pb.FindAllProductsResponse
-	8,  // [8:14] is the sub-list for method output_type
-	2,  // [2:8] is the sub-list for method input_type
-	2,  // [2:2] is the sub-list for extension type_name
-	2,  // [2:2] is the sub-list for extension extendee
-	0,  // [0:2] is the sub-list for field type_name
+	16, // 0: pb.FindAllCategoriesResponse.categories:type_name -> pb.FindAllCategoriesResponse.Categories
+	17, // 1: pb.FindAllProductsResponse.products:type_name -> pb.FindAllProductsResponse.Product
+	18, // 2: pb.FindAllProductItemsResponse.product_items:type_name -> pb.FindAllProductItemsResponse.ProductItem
+	0,  // 3: pb.ProductService.AddCategory:input_type -> pb.AddCategoryRequest
+	2,  // 4: pb.ProductService.FindAllCategories:input_type -> pb.FindAllCategoriesRequest
+	4,  // 5: pb.ProductService.AddVariation:input_type -> pb.AddVariationRequest
+	6,  // 6: pb.ProductService.AddVariationOption:input_type -> pb.AddVariationOptionRequest
+	8,  // 7: pb.ProductService.AddProduct:input_type -> pb.AddProductRequest
+	10, // 8: pb.ProductService.FindAllProducts:input_type -> pb.FindAllProductsRequest
+	12, // 9: pb.ProductService.AddProductItem:input_type -> pb.AddProductItemRequest
+	14, // 10: pb.ProductService.FindAllProductItems:input_type -> pb.FindAllProductItemsRequest
+	1,  // 11: pb.ProductService.AddCategory:output_type -> pb.AddCategoryResponse
+	3,  // 12: pb.ProductService.FindAllCategories:output_type -> pb.FindAllCategoriesResponse
+	5,  // 13: pb.ProductService.AddVariation:output_type -> pb.AddVariationResponse
+	7,  // 14: pb.ProductService.AddVariationOption:output_type -> pb.AddVariationOptionResponse
+	9,  // 15: pb.ProductService.AddProduct:output_type -> pb.AddProductResponse
+	11, // 16: pb.ProductService.FindAllProducts:output_type -> pb.FindAllProductsResponse
+	13, // 17: pb.ProductService.AddProductItem:output_type -> pb.AddProductItemResponse
+	15, // 18: pb.ProductService.FindAllProductItems:output_type -> pb.FindAllProductItemsResponse
+	11, // [11:19] is the sub-list for method output_type
+	3,  // [3:11] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_pkg_proto_product_proto_init() }
@@ -1132,7 +1499,7 @@ func file_pkg_proto_product_proto_init() {
 			}
 		}
 		file_pkg_proto_product_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FindAllCategoriesResponse_Categories); i {
+			switch v := v.(*AddProductItemRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1144,7 +1511,67 @@ func file_pkg_proto_product_proto_init() {
 			}
 		}
 		file_pkg_proto_product_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*AddProductItemResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_pkg_proto_product_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FindAllProductItemsRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_pkg_proto_product_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FindAllProductItemsResponse); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_pkg_proto_product_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FindAllCategoriesResponse_Categories); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_pkg_proto_product_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*FindAllProductsResponse_Product); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_pkg_proto_product_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FindAllProductItemsResponse_ProductItem); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1162,7 +1589,7 @@ func file_pkg_proto_product_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_pkg_proto_product_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

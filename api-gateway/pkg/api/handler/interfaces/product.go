@@ -10,4 +10,7 @@ type ProductHandler interface {
 
 	AddProduct(ctx *gin.Context)
 	FindAllProducts(ctx *gin.Context)
+
+	AddProductItem(ctx *gin.Context)
+	FindAllProductItems(ctx *gin.Context)
 }

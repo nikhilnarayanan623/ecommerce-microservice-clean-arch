@@ -106,3 +106,45 @@ func (c *productHandler) FindAllProducts(ctx *gin.Context) {
 
 	response.SuccessResponse(ctx, "successfully found all products", products)
 }
+
+func (c *productHandler) AddProductItem(ctx *gin.Context) {
+
+	var body request.AddProductItem
+	if err := ctx.ShouldBindJSON(&body); err != nil {
+		response.ErrorResponse(ctx, "failed to bind inputs", err, body)
+		return
+	}
+
+	productItemID, err := c.client.AddProductItem(ctx, body)
+	if err != nil {
+		response.ErrorResponse(ctx, "failed to add product_items", err, nil)
+		return
+	}
+
+	response.SuccessResponse(ctx, "successfully product_item added", productItemID)
+}
+
+func (c *productHandler) FindAllProductItems(ctx *gin.Context) {
+
+	productIDStr := ctx.Param("product_id")
+
+	productID, err := utils.StringToUint64(productIDStr)
+	if err != nil {
+		response.ErrorResponse(ctx, "failed to parse params", err, nil)
+		return
+	}
+
+	productItems, err := c.client.FindAllProductItems(ctx, productID)
+
+	if err != nil {
+		response.ErrorResponse(ctx, "failed to find product items", err, nil)
+		return
+	}
+
+	if len(productItems) == 0 {
+		response.SuccessResponse(ctx, "there is no product items for given product_id")
+		return
+	}
+
+	response.SuccessResponse(ctx, "successfully found product items", productItems)
+}

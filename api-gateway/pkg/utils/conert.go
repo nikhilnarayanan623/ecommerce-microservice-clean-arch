@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -30,4 +31,14 @@ func GetPagination(ctx *gin.Context) request.Pagination {
 	}
 
 	return pagination
+}
+
+func StringToUint64(str string) (uint64, error) {
+
+	num, err := strconv.ParseUint(str, 10, 64)
+	if err != nil {
+		return 0, fmt.Errorf("invalid string failed to convert \nerror:%w", err)
+	}
+
+	return num, nil
 }

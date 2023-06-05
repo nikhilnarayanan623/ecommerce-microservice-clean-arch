@@ -7,6 +7,7 @@ import (
 
 	repo "github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/repository/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/usecase/interfaces"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils/request"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/product-service/pkg/utils/response"
 )
@@ -22,12 +23,15 @@ func NewProductUseCase(repo repo.ProductRepository) interfaces.ProductUseCase {
 }
 
 var (
-	ErrCategoryExist        = errors.New("a category already exist with the given name")
-	ErrInvalidCategoryID    = errors.New("invalid category_id")
-	ErrVariationExist       = errors.New("an variation already exist with given name")
-	ErrInvalidVariationID   = errors.New("invalid variation_id")
-	ErrVariationOptionExist = errors.New("variation option already exist with given value")
-	ErrProductExist         = errors.New("product already exist with given name")
+	ErrCategoryExist            = errors.New("a category already exist with the given name")
+	ErrInvalidCategoryID        = errors.New("invalid category_id")
+	ErrVariationExist           = errors.New("an variation already exist with given name")
+	ErrInvalidVariationID       = errors.New("invalid variation_id")
+	ErrVariationOptionExist     = errors.New("variation option already exist with given value")
+	ErrProductExist             = errors.New("product already exist with given name")
+	ErrInvalidProductID         = errors.New("invalid product_id")
+	ErrProductItemExist         = errors.New("product item already exist with given configurations")
+	ErrInvalidVariationOptionID = errors.New("invalid variation_option_id")
 )
 
 func (c *productUseCase) AddCategory(ctx context.Context, category request.AddCategory) (uint64, error) {
@@ -141,7 +145,73 @@ func (c *productUseCase) AddProduct(ctx context.Context, product request.AddProd
 
 func (c *productUseCase) FindAllProducts(ctx context.Context, pagination request.Pagination) ([]response.Product, error) {
 
-	products, err := c.repo.FindAllProducts(ctx,pagination )
+	products, err := c.repo.FindAllProducts(ctx, pagination)
 
 	return products, err
+}
+
+func (c *productUseCase) AddProductItem(ctx context.Context, productItems request.AddProductItem) (uint64, error) {
+	// validate product_id
+	valid, err := c.repo.IsValidProductID(ctx, productItems.ProductID)
+	if err != nil {
+		return 0, fmt.Errorf("failed to validate product_id \nerror:%w", err)
+	}
+	if !valid {
+		return 0, ErrInvalidProductID
+	}
+	// validate variation_option_id
+	valid, err = c.repo.IsValidVariationOptionID(ctx, productItems.VariationOptionID)
+	if err != nil {
+		return 0, fmt.Errorf("failed to validate variation_option_id \nerror:%w", err)
+	}
+	if !valid {
+		return 0, ErrInvalidVariationOptionID
+	}
+
+	productItemExist, err := c.repo.IsProductItemAlreadyExist(ctx, productItems.ProductID, productItems.VariationOptionID)
+	if err != nil {
+		return 0, fmt.Errorf("failed to check product_item already exist \nerror:%w", err)
+	}
+	if productItemExist {
+		return 0, ErrProductItemExist
+	}
+	productItems.SKU = utils.GenerateSKU()
+
+	var productItemID uint64
+	err = c.repo.Transactions(ctx, func(repo repo.ProductRepository) error {
+		productItemID, err = repo.SaveProductItem(ctx, productItems)
+		if err != nil {
+			return fmt.Errorf("failed to save product_item \nerror:%w", err)
+		}
+
+		err = c.repo.SaveProductConfiguration(ctx, productItemID, productItems.VariationOptionID)
+		if err != nil {
+			return fmt.Errorf("failed to save product_item configuration \nerror:%w", err)
+		}
+		return nil
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	return productItemID, nil
+}
+
+func (c *productUseCase) FindAllProductItems(ctx context.Context, productID uint64) ([]response.ProductItem, error) {
+
+	valid, err := c.repo.IsValidProductID(ctx, productID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to validate product_id \nerror:%w", err)
+	}
+	if !valid {
+		return nil, ErrInvalidProductID
+	}
+
+	productItems, err := c.repo.FindProductItemsByProductID(ctx, productID)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to find all product_items \nerror:%w", err)
+	}
+
+	return productItems, nil
 }

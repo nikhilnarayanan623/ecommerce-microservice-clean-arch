@@ -123,3 +123,44 @@ func (c *productClient) FindAllProducts(ctx context.Context, pagination request.
 
 	return products, nil
 }
+
+func (c *productClient) AddProductItem(ctx context.Context, productItem request.AddProductItem) (uint64, error) {
+
+	res, err := c.client.AddProductItem(ctx, &pb.AddProductItemRequest{
+		ProductId:         productItem.ProductID,
+		QtyInStock:        productItem.QtyInStock,
+		Price:             productItem.Price,
+		VariationOptionId: productItem.VariationOptionID,
+	})
+
+	if err != nil {
+		return 0, err
+	}
+
+	return res.GetProductItemId(), nil
+}
+
+func (c *productClient) FindAllProductItems(ctx context.Context, productID uint64) ([]response.ProductItem, error) {
+
+	res, err := c.client.FindAllProductItems(ctx, &pb.FindAllProductItemsRequest{ProductId: productID})
+
+	if err != nil {
+		return nil, err
+	}
+
+	productItems := make([]response.ProductItem, len(res.GetProductItems()))
+
+	for i, productItem := range res.GetProductItems() {
+		productItems[i] = response.ProductItem{
+			ID:             productItem.GetId(),
+			Name:           productItem.GetName(),
+			QtyInStock:     productItem.GetQtyInStock(),
+			Price:          productItem.GetPrice(),
+			SKU:            productItem.GetSku(),
+			DiscountPrice:  productItem.GetDiscountPrice(),
+			VariationValue: productItem.GetVariationValue(),
+		}
+	}
+
+	return productItems, nil
+}
