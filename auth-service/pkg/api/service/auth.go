@@ -59,7 +59,7 @@ func (c *authServiceServer) UserSignupVerify(ctx context.Context, req *pb.UserSi
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())
 	}
 
-	refreshToken, err := c.usecase.GenereateRefreshToken(ctx, userID, token.User)
+	refreshToken, err := c.usecase.GenerateRefreshToken(ctx, userID, token.User)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())
 	}
@@ -105,7 +105,7 @@ func (c *authServiceServer) UserLogin(ctx context.Context, req *pb.UserLoginRequ
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())
 	}
 
-	refreshToken, err := c.usecase.GenereateRefreshToken(ctx, userID, token.User)
+	refreshToken, err := c.usecase.GenerateRefreshToken(ctx, userID, token.User)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())
 	}
@@ -114,4 +114,14 @@ func (c *authServiceServer) UserLogin(ctx context.Context, req *pb.UserLoginRequ
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil
+}
+
+func (c *authServiceServer) VerifyUserAccessToken(ctx context.Context, req *pb.VerifyUserAccessTokenRequest) (*pb.VerifyUserAccessTokenResponse, error) {
+
+	userID, err := c.usecase.VerifyAccessToken(ctx, req.GetAccessToken(), token.User)
+	if err != nil {
+		return &pb.VerifyUserAccessTokenResponse{}, status.Error(codes.Unauthenticated, err.Error())
+	}
+
+	return &pb.VerifyUserAccessTokenResponse{UserId: userID}, nil
 }

@@ -45,7 +45,7 @@ func (c *authUsecase) UserSignup(ctx context.Context, user domain.SaveUserReques
 	}
 	// if user exist and verified also then return error
 	if existUser.ID != 0 && existUser.Verified {
-		return "", fmt.Errorf("user alredy exist with given details and verified")
+		return "", fmt.Errorf("user already exist with given details and verified")
 	}
 
 	userID := existUser.ID
@@ -132,7 +132,7 @@ func (c *authUsecase) GenerateAccessToken(ctx context.Context, userID uint64, to
 }
 
 // Generate RefreshToken
-func (c *authUsecase) GenereateRefreshToken(ctx context.Context, userID uint64, tokenUser token.UserType) (refreshToken string, err error) {
+func (c *authUsecase) GenerateRefreshToken(ctx context.Context, userID uint64, tokenUser token.UserType) (refreshToken string, err error) {
 
 	tokenID := utils.GenerateUniqueRandomString()
 	expireTime := time.Now().Add(refreshTokenDuration)
@@ -230,4 +230,17 @@ func (c *authUsecase) RefreshAccessToken(ctx context.Context, refreshToken strin
 	})
 
 	return
+}
+
+func (c *authUsecase) VerifyAccessToken(ctx context.Context, accessToken string, usedFor token.UserType) (uint64, error) {
+
+	tokenRes, err := c.tokenAuth.VerifyToken(token.TokenVerifyRequest{
+		TokenString: accessToken,
+		UsedFor:     usedFor,
+	})
+	if err != nil {
+		return 0, fmt.Errorf("failed to verify token %w", err)
+	}
+
+	return tokenRes.UserID, nil
 }

@@ -116,6 +116,26 @@ func (mr *MockAuthServiceClientMockRecorder) UserSignupVerify(ctx, in interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserSignupVerify", reflect.TypeOf((*MockAuthServiceClient)(nil).UserSignupVerify), varargs...)
 }
 
+// VerifyUserAccessToken mocks base method.
+func (m *MockAuthServiceClient) VerifyUserAccessToken(ctx context.Context, in *pb.VerifyUserAccessTokenRequest, opts ...grpc.CallOption) (*pb.VerifyUserAccessTokenResponse, error) {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{ctx, in}
+	for _, a := range opts {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "VerifyUserAccessToken", varargs...)
+	ret0, _ := ret[0].(*pb.VerifyUserAccessTokenResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// VerifyUserAccessToken indicates an expected call of VerifyUserAccessToken.
+func (mr *MockAuthServiceClientMockRecorder) VerifyUserAccessToken(ctx, in interface{}, opts ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{ctx, in}, opts...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyUserAccessToken", reflect.TypeOf((*MockAuthServiceClient)(nil).VerifyUserAccessToken), varargs...)
+}
+
 // MockAuthServiceServer is a mock of AuthServiceServer interface.
 type MockAuthServiceServer struct {
 	ctrl     *gomock.Controller
@@ -197,6 +217,21 @@ func (m *MockAuthServiceServer) UserSignupVerify(arg0 context.Context, arg1 *pb.
 func (mr *MockAuthServiceServerMockRecorder) UserSignupVerify(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserSignupVerify", reflect.TypeOf((*MockAuthServiceServer)(nil).UserSignupVerify), arg0, arg1)
+}
+
+// VerifyUserAccessToken mocks base method.
+func (m *MockAuthServiceServer) VerifyUserAccessToken(arg0 context.Context, arg1 *pb.VerifyUserAccessTokenRequest) (*pb.VerifyUserAccessTokenResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VerifyUserAccessToken", arg0, arg1)
+	ret0, _ := ret[0].(*pb.VerifyUserAccessTokenResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// VerifyUserAccessToken indicates an expected call of VerifyUserAccessToken.
+func (mr *MockAuthServiceServerMockRecorder) VerifyUserAccessToken(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyUserAccessToken", reflect.TypeOf((*MockAuthServiceServer)(nil).VerifyUserAccessToken), arg0, arg1)
 }
 
 // mustEmbedUnimplementedAuthServiceServer mocks base method.

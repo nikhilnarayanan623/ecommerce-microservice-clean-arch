@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_UserSignup_FullMethodName         = "/pb.AuthService/UserSignup"
-	AuthService_UserLogin_FullMethodName          = "/pb.AuthService/UserLogin"
-	AuthService_UserSignupVerify_FullMethodName   = "/pb.AuthService/UserSignupVerify"
-	AuthService_RefreshAccessToken_FullMethodName = "/pb.AuthService/RefreshAccessToken"
+	AuthService_UserSignup_FullMethodName            = "/pb.AuthService/UserSignup"
+	AuthService_UserLogin_FullMethodName             = "/pb.AuthService/UserLogin"
+	AuthService_VerifyUserAccessToken_FullMethodName = "/pb.AuthService/VerifyUserAccessToken"
+	AuthService_UserSignupVerify_FullMethodName      = "/pb.AuthService/UserSignupVerify"
+	AuthService_RefreshAccessToken_FullMethodName    = "/pb.AuthService/RefreshAccessToken"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -31,6 +32,7 @@ const (
 type AuthServiceClient interface {
 	UserSignup(ctx context.Context, in *UserSignupRequest, opts ...grpc.CallOption) (*UserSignupResponse, error)
 	UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginResponse, error)
+	VerifyUserAccessToken(ctx context.Context, in *VerifyUserAccessTokenRequest, opts ...grpc.CallOption) (*VerifyUserAccessTokenResponse, error)
 	UserSignupVerify(ctx context.Context, in *UserSignupVerifyRequest, opts ...grpc.CallOption) (*UserSignupVerifyResponse, error)
 	RefreshAccessToken(ctx context.Context, in *RefreshAccessTokenRequest, opts ...grpc.CallOption) (*RefreshAccessTokenResponse, error)
 }
@@ -61,6 +63,15 @@ func (c *authServiceClient) UserLogin(ctx context.Context, in *UserLoginRequest,
 	return out, nil
 }
 
+func (c *authServiceClient) VerifyUserAccessToken(ctx context.Context, in *VerifyUserAccessTokenRequest, opts ...grpc.CallOption) (*VerifyUserAccessTokenResponse, error) {
+	out := new(VerifyUserAccessTokenResponse)
+	err := c.cc.Invoke(ctx, AuthService_VerifyUserAccessToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authServiceClient) UserSignupVerify(ctx context.Context, in *UserSignupVerifyRequest, opts ...grpc.CallOption) (*UserSignupVerifyResponse, error) {
 	out := new(UserSignupVerifyResponse)
 	err := c.cc.Invoke(ctx, AuthService_UserSignupVerify_FullMethodName, in, out, opts...)
@@ -85,6 +96,7 @@ func (c *authServiceClient) RefreshAccessToken(ctx context.Context, in *RefreshA
 type AuthServiceServer interface {
 	UserSignup(context.Context, *UserSignupRequest) (*UserSignupResponse, error)
 	UserLogin(context.Context, *UserLoginRequest) (*UserLoginResponse, error)
+	VerifyUserAccessToken(context.Context, *VerifyUserAccessTokenRequest) (*VerifyUserAccessTokenResponse, error)
 	UserSignupVerify(context.Context, *UserSignupVerifyRequest) (*UserSignupVerifyResponse, error)
 	RefreshAccessToken(context.Context, *RefreshAccessTokenRequest) (*RefreshAccessTokenResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
@@ -99,6 +111,9 @@ func (UnimplementedAuthServiceServer) UserSignup(context.Context, *UserSignupReq
 }
 func (UnimplementedAuthServiceServer) UserLogin(context.Context, *UserLoginRequest) (*UserLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserLogin not implemented")
+}
+func (UnimplementedAuthServiceServer) VerifyUserAccessToken(context.Context, *VerifyUserAccessTokenRequest) (*VerifyUserAccessTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyUserAccessToken not implemented")
 }
 func (UnimplementedAuthServiceServer) UserSignupVerify(context.Context, *UserSignupVerifyRequest) (*UserSignupVerifyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserSignupVerify not implemented")
@@ -155,6 +170,24 @@ func _AuthService_UserLogin_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_VerifyUserAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyUserAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).VerifyUserAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_VerifyUserAccessToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).VerifyUserAccessToken(ctx, req.(*VerifyUserAccessTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AuthService_UserSignupVerify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserSignupVerifyRequest)
 	if err := dec(in); err != nil {
@@ -205,6 +238,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserLogin",
 			Handler:    _AuthService_UserLogin_Handler,
+		},
+		{
+			MethodName: "VerifyUserAccessToken",
+			Handler:    _AuthService_VerifyUserAccessToken_Handler,
 		},
 		{
 			MethodName: "UserSignupVerify",

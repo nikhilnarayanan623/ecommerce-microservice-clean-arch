@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/api/handler/interfaces"
@@ -9,6 +10,8 @@ import (
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/domain"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/request"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/response"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type authHandler struct {
@@ -78,6 +81,27 @@ func (c *authHandler) UserSignupVerify(ctx *gin.Context) {
 	}
 
 	response.SuccessResponse(ctx, "successfully otp verified ", tokenRes)
+}
+
+func (c *authHandler) AuthenticateUser(ctx *gin.Context) {
+
+	authHeader := ctx.GetHeader("authorization")
+
+	authFields := strings.Fields(authHeader)
+	if len(authFields) < 2 {
+		response.ErrorResponse(ctx, "unauthorized user", status.Error(codes.Unauthenticated, "token not found on header"), nil)
+		ctx.Abort()
+		return
+	}
+	accessToken := authFields[1]
+	userID, err := c.client.VerifyUserAccessToken(ctx, accessToken)
+	if err != nil {
+		response.ErrorResponse(ctx, "failed authenticate user", err, nil)
+		ctx.Abort()
+		return
+	}
+
+	ctx.Set("userId", userID)
 }
 
 func (c *authHandler) RefreshAccessTokenForUser(ctx *gin.Context) {

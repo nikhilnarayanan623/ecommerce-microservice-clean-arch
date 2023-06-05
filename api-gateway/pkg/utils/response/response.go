@@ -53,6 +53,8 @@ func getErrorCode(err error) int {
 		httpCode = http.StatusConflict
 	case codes.Internal:
 		httpCode = http.StatusInternalServerError
+	case codes.Unauthenticated:
+		httpCode = http.StatusUnauthorized
 	default:
 		httpCode = http.StatusBadRequest
 	}
