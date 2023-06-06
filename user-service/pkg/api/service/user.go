@@ -95,3 +95,21 @@ func (c *UserServiceServer) UpdateUserVerified(ctx context.Context, req *pb.Upda
 	utils.LogMessage(utils.Green, "Successfully User Verified")
 	return &emptypb.Empty{}, nil
 }
+
+func (c *UserServiceServer) GetUserProfile(ctx context.Context, req *pb.GetUserProfileRequest) (*pb.GetUserProfileResponse, error) {
+	utils.LogMessage(utils.Cyan, "GetUserProfile Invoked")
+
+	user, err := c.usecase.FindUserByID(ctx, req.GetUserId())
+	if err != nil {
+		utils.LogMessage(utils.Red, err.Error())
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	utils.LogMessage(utils.Green, "Successfully found user details")
+	return &pb.GetUserProfileResponse{
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Age:       user.Age,
+		Email:     user.Email,
+		Phone:     user.Phone,
+	}, nil
+}

@@ -11,6 +11,7 @@ service UserService {
     rpc FindUserByEmail(FindUserByEmailRequest) returns (FindUserByEmailResponse) {};
     rpc FindUserByPhone(FindUserByPhoneRequest) returns (FindUserByPhoneResponse){};
     rpc UpdateUserVerified(UpdateUserVerifyRequest) returns(google.protobuf.Empty){};
+    rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse){};
 }
 
 // save user
@@ -64,4 +65,16 @@ message FindUserByPhoneResponse {
     string password = 7;
     bool verified = 8;
     bool block_status = 9;
+}
+
+message GetUserProfileRequest{
+    uint64 user_id = 1;
+}
+
+message GetUserProfileResponse{
+    string first_name = 2;
+    string last_name = 3;
+    uint64 age = 4;
+    string email = 5;
+    string phone = 6;
 }

@@ -32,4 +32,9 @@ func SetupUserRoutes(user *gin.RouterGroup, authHandler handler.AuthHandler,
 		products.GET("/", productHandler.FindAllProducts)
 		products.GET("/items/:product_id", productHandler.FindAllProductItems)
 	}
+
+	profile := user.Group("/profile")
+	{
+		profile.GET("/", userHandler.GetProfile)
+	}
 }

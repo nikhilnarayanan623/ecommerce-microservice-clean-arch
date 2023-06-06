@@ -42,3 +42,10 @@ func StringToUint64(str string) (uint64, error) {
 
 	return num, nil
 }
+
+func GetUserIDFromContext(ctx *gin.Context) uint64 {
+
+	userID := ctx.GetUint64("userId")
+	fmt.Println("userID", userID)
+	return userID
+}

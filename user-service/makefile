@@ -9,3 +9,6 @@ run:
 
 mock:
 	mockgen -source=./pkg/usecase/interfaces/user.go -destination=./pkg/mock/usecase_mock.go -package=mock
+
+docker-build:
+	docker build -t nikhil382/ecommerce-microservice-clean-arch-user-service .

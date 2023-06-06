@@ -14,6 +14,7 @@ func InitializeApi(cfg *config.Config) (*api.Server, error) {
 
 	wire.Build(
 		client.NewAuthClient,
+		client.NewUserClient,
 		client.NewProductClient,
 		handler.NewAuthHandler,
 		handler.NewUserHandler,
