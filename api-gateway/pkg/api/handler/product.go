@@ -126,9 +126,7 @@ func (c *productHandler) AddProductItem(ctx *gin.Context) {
 
 func (c *productHandler) FindAllProductItems(ctx *gin.Context) {
 
-	productIDStr := ctx.Param("product_id")
-
-	productID, err := utils.StringToUint64(productIDStr)
+	productID, err := utils.StringToUint64(ctx.Param("product_id"))
 	if err != nil {
 		response.ErrorResponse(ctx, "failed to parse params", err, nil)
 		return

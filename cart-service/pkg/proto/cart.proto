@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "./pkg/pb";
+
+service CartService{
+   rpc AddToCart(AddToCartRequest) returns (AddToCartResponse){};
+   rpc FindCart(FindCartRequest) returns (FindCartResponse){};
+}
+
+message AddToCartRequest{
+    uint64 user_id = 1;
+    uint64 product_id = 2;
+}
+
+message AddToCartResponse{
+}
+
+message FindCartRequest{
+    uint64 user_id = 1;
+}
+
+message FindCartResponse{
+    double total_price = 1;
+    message CartItem{
+       uint64 product_item_id = 1;
+       string product_name = 2;
+       string sku = 3;
+       string variation_value = 4;
+       double price = 5;
+       uint64 qty =  6;
+       double sub_total = 7;
+       uint64 qty_in_stock = 8;
+       uint64 discount_price = 9;
+    }
+   repeated CartItem cart_items = 2;
+}

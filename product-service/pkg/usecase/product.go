@@ -215,3 +215,11 @@ func (c *productUseCase) FindAllProductItems(ctx context.Context, productID uint
 
 	return productItems, nil
 }
+
+func (c *productUseCase) FindProductItemByID(ctx context.Context, productItemID uint64) (response.ProductItem, error) {
+	productItem, err := c.repo.FindProductItemByID(ctx, productItemID)
+	if err != nil {
+		return response.ProductItem{}, fmt.Errorf("failed to find product_item \nerror:%w", err)
+	}
+	return productItem, nil
+}
