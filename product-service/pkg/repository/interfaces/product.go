@@ -32,6 +32,7 @@ type ProductRepository interface {
 
 	SaveProductItem(ctx context.Context, productItem request.AddProductItem) (productItemID uint64, err error)
 	FindProductItemsByProductID(ctx context.Context, productID uint64) (productItems []response.ProductItem, err error)
+	FindProductItemByID(ctx context.Context, productItemID uint64) (response.ProductItem, error)
 	IsProductItemAlreadyExist(ctx context.Context, productID, variationOptionID uint64) (exist bool, err error)
 	SaveProductConfiguration(ctx context.Context, productItemID, variationOptionID uint64) error
 }

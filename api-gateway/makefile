@@ -9,3 +9,6 @@ wire:
 
 run: 
 	go run cmd/main.go
+
+docker-build:
+	docker build -t nikhil382/ecommerce-microservice-clean-arch-api-gateway .

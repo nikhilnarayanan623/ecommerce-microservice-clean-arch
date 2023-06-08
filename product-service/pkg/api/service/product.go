@@ -223,3 +223,20 @@ func (c *productServiceServer) FindAllProductItems(ctx context.Context, req *pb.
 
 	return &pb.FindAllProductItemsResponse{ProductItems: outputProductItems}, nil
 }
+
+func (c *productServiceServer) FindProductItem(ctx context.Context, req *pb.FindProductItemRequest) (*pb.FindProductItemResponse, error) {
+
+	productItem, err := c.usecase.FindProductItemByID(ctx, req.GetProductItemId())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &pb.FindProductItemResponse{
+		Id:             productItem.ID,
+		Name:           productItem.Name,
+		Price:          productItem.Price,
+		QtyInStock:     productItem.QtyInStock,
+		Sku:            productItem.SKU,
+		DiscountPrice:  productItem.DiscountPrice,
+		VariationValue: productItem.VariationValue,
+	}, nil
+}

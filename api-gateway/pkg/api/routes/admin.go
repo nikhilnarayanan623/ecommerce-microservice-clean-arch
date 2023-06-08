@@ -12,9 +12,13 @@ func SetupAdminRoutes(admin *gin.RouterGroup, productHandler handler.ProductHand
 	admin.POST("/variation", productHandler.AddVariation)
 	admin.POST("/variation/option", productHandler.AddVariationOption)
 
-	admin.POST("/product", productHandler.AddProduct)
-	admin.GET("/product", productHandler.FindAllProducts)
+	product := admin.Group("/product")
+	{
+		product.POST("/", productHandler.AddProduct)
+		product.GET("/", productHandler.FindAllProducts)
 
-	admin.POST("/product/item", productHandler.AddProductItem)
-	admin.GET("/product/item/:product_id", productHandler.FindAllProductItems)
+		product.POST("/items", productHandler.AddProductItem)
+		product.GET("/items/:product_id", productHandler.FindAllProductItems)
+	}
+
 }

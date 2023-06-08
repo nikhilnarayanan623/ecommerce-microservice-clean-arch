@@ -221,3 +221,16 @@ func (c *productDatabase) IsProductItemAlreadyExist(ctx context.Context, product
 
 	return
 }
+
+func (c *productDatabase) FindProductItemByID(ctx context.Context, productItemID uint64) (productItem response.ProductItem, err error) {
+
+	query := `SELECT pi.id, pi.price, pi.qty_in_stock, pi.sku, 
+	pi.discount_price, p.name, vo.value AS variation_value  FROM product_items pi 
+	INNER JOIN products p ON pi.product_id = p.id 
+	INNER JOIN product_configurations pc ON pi.id = pc.product_item_id  
+	INNER JOIN variation_options vo ON pc.variation_option_id = vo.id 
+	WHERE pi.id = $1`
+	err = c.db.Raw(query, productItemID).Scan(&productItem).Error
+
+	return productItem, err
+}

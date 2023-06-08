@@ -24,6 +24,7 @@ const (
 	UserService_FindUserByEmail_FullMethodName    = "/pb.UserService/FindUserByEmail"
 	UserService_FindUserByPhone_FullMethodName    = "/pb.UserService/FindUserByPhone"
 	UserService_UpdateUserVerified_FullMethodName = "/pb.UserService/UpdateUserVerified"
+	UserService_GetUserProfile_FullMethodName     = "/pb.UserService/GetUserProfile"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -34,6 +35,7 @@ type UserServiceClient interface {
 	FindUserByEmail(ctx context.Context, in *FindUserByEmailRequest, opts ...grpc.CallOption) (*FindUserByEmailResponse, error)
 	FindUserByPhone(ctx context.Context, in *FindUserByPhoneRequest, opts ...grpc.CallOption) (*FindUserByPhoneResponse, error)
 	UpdateUserVerified(ctx context.Context, in *UpdateUserVerifyRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error)
 }
 
 type userServiceClient struct {
@@ -80,6 +82,15 @@ func (c *userServiceClient) UpdateUserVerified(ctx context.Context, in *UpdateUs
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserProfile(ctx context.Context, in *GetUserProfileRequest, opts ...grpc.CallOption) (*GetUserProfileResponse, error) {
+	out := new(GetUserProfileResponse)
+	err := c.cc.Invoke(ctx, UserService_GetUserProfile_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
@@ -88,6 +99,7 @@ type UserServiceServer interface {
 	FindUserByEmail(context.Context, *FindUserByEmailRequest) (*FindUserByEmailResponse, error)
 	FindUserByPhone(context.Context, *FindUserByPhoneRequest) (*FindUserByPhoneResponse, error)
 	UpdateUserVerified(context.Context, *UpdateUserVerifyRequest) (*empty.Empty, error)
+	GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -106,6 +118,9 @@ func (UnimplementedUserServiceServer) FindUserByPhone(context.Context, *FindUser
 }
 func (UnimplementedUserServiceServer) UpdateUserVerified(context.Context, *UpdateUserVerifyRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserVerified not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserProfile(context.Context, *GetUserProfileRequest) (*GetUserProfileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserProfile not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -192,6 +207,24 @@ func _UserService_UpdateUserVerified_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserProfileRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserProfile(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetUserProfile_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserProfile(ctx, req.(*GetUserProfileRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -214,6 +247,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUserVerified",
 			Handler:    _UserService_UpdateUserVerified_Handler,
+		},
+		{
+			MethodName: "GetUserProfile",
+			Handler:    _UserService_GetUserProfile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

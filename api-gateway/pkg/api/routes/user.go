@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	handler "github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/api/handler/interfaces"
 )
 
-func SetupUserRoutes(user *gin.RouterGroup, authHandler handler.AuthHandler, userHandler handler.UserHandler) {
+func SetupUserRoutes(user *gin.RouterGroup, authHandler handler.AuthHandler,
+	userHandler handler.UserHandler, productHandler handler.ProductHandler,
+	cartHandler handler.CartHandler) {
 
 	auth := user.Group("/auth")
 	{
@@ -27,6 +27,21 @@ func SetupUserRoutes(user *gin.RouterGroup, authHandler handler.AuthHandler, use
 	}
 
 	user.Use(authHandler.AuthenticateUser)
-)
 
+	products := user.Group("/product")
+	{
+		products.GET("/", productHandler.FindAllProducts)
+		products.GET("/items/:product_id", productHandler.FindAllProductItems)
+	}
+
+	cart := user.Group("/cart")
+	{
+		cart.POST("/:product_item_id", cartHandler.AddToCart)
+		cart.GET("", cartHandler.FindCart)
+	}
+
+	profile := user.Group("/profile")
+	{
+		profile.GET("/", userHandler.GetProfile)
+	}
 }
