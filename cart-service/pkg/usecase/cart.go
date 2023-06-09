@@ -27,6 +27,7 @@ func NewCartUseCase(repo repo.CartRepository, productClient productClient.Produc
 var (
 	ErrInvalidProductItemID          = errors.New("invalid product_item_id")
 	ErrProductItemAlreadyExistOnCart = errors.New("product_item already exist on cart")
+	ErrProductItemOutOfStock         = errors.New("product_item out of stock")
 )
 
 func (c *cartUseCase) AddToCart(ctx context.Context, userID, productItemID uint64) error {
@@ -37,6 +38,10 @@ func (c *cartUseCase) AddToCart(ctx context.Context, userID, productItemID uint6
 	}
 	if productItem.ID == 0 {
 		return ErrInvalidProductItemID
+	}
+
+	if productItem.QtyInStock <= 0 {
+		return ErrProductItemOutOfStock
 	}
 
 	cart, err := c.repo.FindCartByUserID(ctx, userID)
