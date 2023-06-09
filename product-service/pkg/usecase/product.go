@@ -32,6 +32,8 @@ var (
 	ErrInvalidProductID         = errors.New("invalid product_id")
 	ErrProductItemExist         = errors.New("product item already exist with given configurations")
 	ErrInvalidVariationOptionID = errors.New("invalid variation_option_id")
+
+	ErrInvalidStockUpdateQty = errors.New("given stock decrease qty greater than product qty_in_stock")
 )
 
 func (c *productUseCase) AddCategory(ctx context.Context, category request.AddCategory) (uint64, error) {
@@ -222,4 +224,28 @@ func (c *productUseCase) FindProductItemByID(ctx context.Context, productItemID 
 		return response.ProductItem{}, fmt.Errorf("failed to find product_item \nerror:%w", err)
 	}
 	return productItem, nil
+}
+
+func (c *productUseCase) MultipleStockDecrease(ctx context.Context, stockDetails []request.StockDecrease) error {
+
+	var updateTotalQty uint64
+	for _, stock := range stockDetails {
+
+		productItemStock, err := c.repo.FindProductItemsStockDetails(ctx, stock.SKU)
+		if err != nil {
+			return fmt.Errorf("failed to find product stock details \nerror:%w", err)
+		}
+
+		if stock.QtyToDecrease > productItemStock.QtyInStock {
+			return ErrInvalidStockUpdateQty
+		}
+
+		updateTotalQty = productItemStock.QtyInStock - stock.QtyToDecrease
+		err = c.repo.UpdateProductQty(ctx, productItemStock.SKU, updateTotalQty)
+		if err != nil {
+			return fmt.Errorf("failed to decrease product qty_in_stock \nerror:%w", err)
+		}
+	}
+
+	return nil
 }

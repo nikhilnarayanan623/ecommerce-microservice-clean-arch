@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "./pkg/pb";
+
+service OrderService{
+    rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse){};
+}
+
+message PlaceOrderRequest{
+    uint64 user_id = 1;
+}
+
+message PlaceOrderResponse{
+    uint64 shop_order_id = 1;
+}

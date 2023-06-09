@@ -30,3 +30,8 @@ type AddProductItem struct {
 	SKU               string
 	VariationOptionID uint64
 }
+
+type StockDecrease struct {
+	SKU           string
+	QtyToDecrease uint64
+}

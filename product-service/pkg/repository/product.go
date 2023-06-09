@@ -234,3 +234,19 @@ func (c *productDatabase) FindProductItemByID(ctx context.Context, productItemID
 
 	return productItem, err
 }
+
+func (c *productDatabase) FindProductItemsStockDetails(ctx context.Context, sku string) (stockDetails response.StockDetails, err error) {
+
+	query := `SELECT id, sku, qty_in_stock FROM product_items WHERE sku = $1`
+	err = c.db.Raw(query, sku).Scan(&stockDetails).Error
+
+	return
+}
+
+func (c *productDatabase) UpdateProductQty(ctx context.Context, sku string, updateTotalQty uint64) error {
+
+	query := `UPDATE product_items SET qty_in_stock = $1 WHERE sku = $2`
+	err := c.db.Exec(query, updateTotalQty, sku).Error
+
+	return err
+}

@@ -14,11 +14,11 @@ type Server struct {
 
 // NewServerHTTP creates a new server with given handler functions
 func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler, userHandler handler.UserHandler,
-	productHandler handler.ProductHandler, cartHandler handler.CartHandler) *Server {
+	productHandler handler.ProductHandler, cartHandler handler.CartHandler, orderHandler handler.OrderHandler) *Server {
 	engine := gin.New()
 	engine.Use(gin.Logger())
 
-	routes.SetupUserRoutes(engine.Group("/"), authHandler, userHandler, productHandler, cartHandler)
+	routes.SetupUserRoutes(engine.Group("/"), authHandler, userHandler, productHandler, cartHandler, orderHandler)
 	routes.SetupAdminRoutes(engine.Group("/admin"), productHandler)
 
 	return &Server{

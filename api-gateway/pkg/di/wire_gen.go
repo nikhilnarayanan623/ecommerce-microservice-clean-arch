@@ -36,6 +36,11 @@ func InitializeApi(cfg *config.Config) (*api.Server, error) {
 		return nil, err
 	}
 	cartHandler := handler.NewCartHandler(cartClient)
-	server := api.NewServerHTTP(cfg, authHandler, userHandler, productHandler, cartHandler)
+	orderClient, err := client.NewOrderClient(cfg)
+	if err != nil {
+		return nil, err
+	}
+	orderHandler := handler.NewOrderHandler(orderClient)
+	server := api.NewServerHTTP(cfg, authHandler, userHandler, productHandler, cartHandler, orderHandler)
 	return server, nil
 }

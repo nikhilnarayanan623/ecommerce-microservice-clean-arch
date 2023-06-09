@@ -26,3 +26,8 @@ type ProductItem struct {
 	DiscountPrice  uint64
 	VariationValue string
 }
+
+type StockDetails struct {
+	QtyInStock uint64
+	SKU        string
+}

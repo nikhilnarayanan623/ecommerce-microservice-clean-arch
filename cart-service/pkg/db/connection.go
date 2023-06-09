@@ -28,36 +28,3 @@ func ConnectDatabase(cfg *config.Config) (*gorm.DB, error) {
 	}
 	return db, nil
 }
-
-func isAnagram(s string, t string) bool {
-
-	if len(s) != len(t) {
-		return false
-	}
-
-	arrS := []byte(s)
-	arrT := []byte(t)
-
-	// set := map[byte]int{}
-
-	// for _,char := range arrS{
-	//     set[char]++
-	// }
-
-	// for _,char := range arrT{
-	//     if count := set[char]; count == 0 {
-	//         return false
-	//     }
-	//     set[char]--
-	// }
-
-	an := 0
-
-	for i := 0; i < len(arrS); i++ {
-
-		an ^= int(arrS[i])
-		an ^= int(arrT[i])
-	}
-
-	return true
-}

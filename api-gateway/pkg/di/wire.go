@@ -17,11 +17,13 @@ func InitializeApi(cfg *config.Config) (*api.Server, error) {
 		client.NewUserClient,
 		client.NewProductClient,
 		client.NewCartClient,
+		client.NewOrderClient,
 
 		handler.NewAuthHandler,
 		handler.NewUserHandler,
 		handler.NewProductHandler,
 		handler.NewCartHandler,
+		handler.NewOrderHandler,
 		api.NewServerHTTP,
 	)
 	return &api.Server{}, nil
