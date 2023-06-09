@@ -14,4 +14,5 @@ type CartRepository interface {
 	SaveCartItem(ctx context.Context, cartID, productItemID uint64) error
 	IsProductItemAlreadyExistInCart(ctx context.Context, cartID, productItemID uint64) (exist bool, err error)
 	FindCartItemsByCartID(ctx context.Context, cartID uint64) ([]response.CartItem, error)
+	RemoveAllCartItems(ctx context.Context, cartID uint64) error
 }

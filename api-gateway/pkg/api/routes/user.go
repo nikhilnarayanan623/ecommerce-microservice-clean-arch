@@ -7,7 +7,7 @@ import (
 
 func SetupUserRoutes(user *gin.RouterGroup, authHandler handler.AuthHandler,
 	userHandler handler.UserHandler, productHandler handler.ProductHandler,
-	cartHandler handler.CartHandler) {
+	cartHandler handler.CartHandler, orderHandler handler.OrderHandler) {
 
 	auth := user.Group("/auth")
 	{
@@ -38,6 +38,8 @@ func SetupUserRoutes(user *gin.RouterGroup, authHandler handler.AuthHandler,
 	{
 		cart.POST("/:product_item_id", cartHandler.AddToCart)
 		cart.GET("", cartHandler.FindCart)
+
+		cart.POST("/place-order", orderHandler.PlaceOrder)
 	}
 
 	profile := user.Group("/profile")

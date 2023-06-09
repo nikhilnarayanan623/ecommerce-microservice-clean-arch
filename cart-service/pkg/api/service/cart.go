@@ -69,3 +69,13 @@ func (c *CartServiceServer) FindCart(ctx context.Context, req *pb.FindCartReques
 		CartItems:  outputCartItems,
 	}, nil
 }
+
+func (c *CartServiceServer) RemoveAllCartItems(ctx context.Context, req *pb.RemoveAllCartItemsRequest) (*pb.RemoveAllCartItemsResponse, error) {
+
+	err := c.usecase.RemoveAllCartItems(ctx, req.GetUserId())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &pb.RemoveAllCartItemsResponse{}, nil
+}

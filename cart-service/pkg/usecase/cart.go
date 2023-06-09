@@ -95,3 +95,15 @@ func (c *cartUseCase) FindCartItem(ctx context.Context, cartID uint64) ([]respon
 	}
 	return cartItems, nil
 }
+
+func (c *cartUseCase) RemoveAllCartItems(ctx context.Context, userID uint64) error {
+
+	cart, err := c.repo.FindCartByUserID(ctx, userID)
+	if err != nil {
+		return fmt.Errorf("failed to find cart \nerror:%w", err)
+	}
+
+	err = c.repo.RemoveAllCartItems(ctx, cart.ID)
+
+	return err
+}

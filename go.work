@@ -4,6 +4,7 @@ use (
 	./api-gateway
 	./auth-service
 	./cart-service
+	./order-service
 	./product-service
 	./user-service
 )

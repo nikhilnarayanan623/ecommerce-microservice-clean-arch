@@ -240,3 +240,26 @@ func (c *productServiceServer) FindProductItem(ctx context.Context, req *pb.Find
 		VariationValue: productItem.VariationValue,
 	}, nil
 }
+
+func (c *productServiceServer) MultipleStockDecrease(ctx context.Context,
+	req *pb.MultipleStockDecreaseRequest) (*pb.MultipleStockDecreaseResponse, error) {
+
+	stockDetails := make([]request.StockDecrease, len(req.GetStockDecreases()))
+
+	for i, stockDecrease := range req.GetStockDecreases() {
+		stockDetails[i].SKU = stockDecrease.GetSku()
+		stockDetails[i].QtyToDecrease = stockDecrease.GetQtyToDecrease()
+	}
+
+	err := c.usecase.MultipleStockDecrease(ctx, stockDetails)
+	if err != nil {
+		errCode := codes.Internal
+		if err == usecase.ErrInvalidStockUpdateQty {
+			errCode = codes.InvalidArgument
+		}
+
+		return nil, status.Error(errCode, "failed to decrease stock qty")
+	}
+
+	return &pb.MultipleStockDecreaseResponse{}, nil
+}

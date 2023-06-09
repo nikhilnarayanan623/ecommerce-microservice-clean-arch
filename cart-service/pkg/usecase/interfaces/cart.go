@@ -11,4 +11,5 @@ type CartUseCase interface {
 	AddToCart(ctx context.Context, userID, productItemID uint64) error
 	FindCart(ctx context.Context, userID uint64) (domain.Cart, error)
 	FindCartItem(ctx context.Context, cartID uint64) ([]response.CartItem, error)
+	RemoveAllCartItems(ctx context.Context,userID uint64)error
 }

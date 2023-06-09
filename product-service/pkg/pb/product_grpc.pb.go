@@ -19,15 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ProductService_AddCategory_FullMethodName         = "/pb.ProductService/AddCategory"
-	ProductService_FindAllCategories_FullMethodName   = "/pb.ProductService/FindAllCategories"
-	ProductService_AddVariation_FullMethodName        = "/pb.ProductService/AddVariation"
-	ProductService_AddVariationOption_FullMethodName  = "/pb.ProductService/AddVariationOption"
-	ProductService_AddProduct_FullMethodName          = "/pb.ProductService/AddProduct"
-	ProductService_FindAllProducts_FullMethodName     = "/pb.ProductService/FindAllProducts"
-	ProductService_AddProductItem_FullMethodName      = "/pb.ProductService/AddProductItem"
-	ProductService_FindAllProductItems_FullMethodName = "/pb.ProductService/FindAllProductItems"
-	ProductService_FindProductItem_FullMethodName     = "/pb.ProductService/FindProductItem"
+	ProductService_AddCategory_FullMethodName           = "/pb.ProductService/AddCategory"
+	ProductService_FindAllCategories_FullMethodName     = "/pb.ProductService/FindAllCategories"
+	ProductService_AddVariation_FullMethodName          = "/pb.ProductService/AddVariation"
+	ProductService_AddVariationOption_FullMethodName    = "/pb.ProductService/AddVariationOption"
+	ProductService_AddProduct_FullMethodName            = "/pb.ProductService/AddProduct"
+	ProductService_FindAllProducts_FullMethodName       = "/pb.ProductService/FindAllProducts"
+	ProductService_AddProductItem_FullMethodName        = "/pb.ProductService/AddProductItem"
+	ProductService_FindAllProductItems_FullMethodName   = "/pb.ProductService/FindAllProductItems"
+	ProductService_FindProductItem_FullMethodName       = "/pb.ProductService/FindProductItem"
+	ProductService_MultipleStockDecrease_FullMethodName = "/pb.ProductService/MultipleStockDecrease"
 )
 
 // ProductServiceClient is the client API for ProductService service.
@@ -43,6 +44,7 @@ type ProductServiceClient interface {
 	AddProductItem(ctx context.Context, in *AddProductItemRequest, opts ...grpc.CallOption) (*AddProductItemResponse, error)
 	FindAllProductItems(ctx context.Context, in *FindAllProductItemsRequest, opts ...grpc.CallOption) (*FindAllProductItemsResponse, error)
 	FindProductItem(ctx context.Context, in *FindProductItemRequest, opts ...grpc.CallOption) (*FindProductItemResponse, error)
+	MultipleStockDecrease(ctx context.Context, in *MultipleStockDecreaseRequest, opts ...grpc.CallOption) (*MultipleStockDecreaseResponse, error)
 }
 
 type productServiceClient struct {
@@ -134,6 +136,15 @@ func (c *productServiceClient) FindProductItem(ctx context.Context, in *FindProd
 	return out, nil
 }
 
+func (c *productServiceClient) MultipleStockDecrease(ctx context.Context, in *MultipleStockDecreaseRequest, opts ...grpc.CallOption) (*MultipleStockDecreaseResponse, error) {
+	out := new(MultipleStockDecreaseResponse)
+	err := c.cc.Invoke(ctx, ProductService_MultipleStockDecrease_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductServiceServer is the server API for ProductService service.
 // All implementations must embed UnimplementedProductServiceServer
 // for forward compatibility
@@ -147,6 +158,7 @@ type ProductServiceServer interface {
 	AddProductItem(context.Context, *AddProductItemRequest) (*AddProductItemResponse, error)
 	FindAllProductItems(context.Context, *FindAllProductItemsRequest) (*FindAllProductItemsResponse, error)
 	FindProductItem(context.Context, *FindProductItemRequest) (*FindProductItemResponse, error)
+	MultipleStockDecrease(context.Context, *MultipleStockDecreaseRequest) (*MultipleStockDecreaseResponse, error)
 	mustEmbedUnimplementedProductServiceServer()
 }
 
@@ -180,6 +192,9 @@ func (UnimplementedProductServiceServer) FindAllProductItems(context.Context, *F
 }
 func (UnimplementedProductServiceServer) FindProductItem(context.Context, *FindProductItemRequest) (*FindProductItemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindProductItem not implemented")
+}
+func (UnimplementedProductServiceServer) MultipleStockDecrease(context.Context, *MultipleStockDecreaseRequest) (*MultipleStockDecreaseResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MultipleStockDecrease not implemented")
 }
 func (UnimplementedProductServiceServer) mustEmbedUnimplementedProductServiceServer() {}
 
@@ -356,6 +371,24 @@ func _ProductService_FindProductItem_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ProductService_MultipleStockDecrease_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MultipleStockDecreaseRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServiceServer).MultipleStockDecrease(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProductService_MultipleStockDecrease_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServiceServer).MultipleStockDecrease(ctx, req.(*MultipleStockDecreaseRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ProductService_ServiceDesc is the grpc.ServiceDesc for ProductService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -398,6 +431,10 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FindProductItem",
 			Handler:    _ProductService_FindProductItem_Handler,
+		},
+		{
+			MethodName: "MultipleStockDecrease",
+			Handler:    _ProductService_MultipleStockDecrease_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

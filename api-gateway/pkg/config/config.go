@@ -7,10 +7,13 @@ type Config struct {
 	ProductServiceUrl string `mapstructure:"PRODUCT_SERVICE_URL"`
 	UserServiceUrl    string `mapstructure:"USER_SERVICE_URL"`
 	CartServiceUrl    string `mapstructure:"CART_SERVICE_URL"`
+	OrderServiceUrl   string `mapstructure:"ORDER_SERVICE_URL"`
 	Port              string `mapstructure:"PORT"`
 }
 
-var envs = []string{"AUTH_SERVICE_URL", "USER_SERVICE_URL", "PRODUCT_SERVICE_URL", "CART_SERVICE_URL", "PORT"}
+var envs = []string{"AUTH_SERVICE_URL", "USER_SERVICE_URL",
+	"PRODUCT_SERVICE_URL", "CART_SERVICE_URL", "ORDER_SERVICE_URL", "PORT",
+}
 
 func LoadConfig() (config *Config, err error) {
 

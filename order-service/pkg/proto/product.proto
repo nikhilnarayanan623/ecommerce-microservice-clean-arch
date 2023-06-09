@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "./pkg/pb";
+
+service ProductService {
+    rpc MultipleStockDecrease(MultipleStockDecreaseRequest) returns (MultipleStockDecreaseResponse){};
+}
+
+// Multiple Stock decrease
+message MultipleStockDecreaseRequest{
+    message StockDecreases{
+        string sku = 1;
+        uint64 qty_to_decrease = 2;
+    }
+
+    repeated StockDecreases stock_decreases = 1;
+}
+
+message MultipleStockDecreaseResponse{
+}

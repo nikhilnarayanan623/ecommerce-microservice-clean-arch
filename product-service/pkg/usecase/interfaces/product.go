@@ -21,4 +21,6 @@ type ProductUseCase interface {
 	FindAllProductItems(ctx context.Context, productID uint64) ([]response.ProductItem, error)
 
 	FindProductItemByID(ctx context.Context, productItemID uint64) (response.ProductItem, error)
+
+	MultipleStockDecrease(ctx context.Context, stockDetails []request.StockDecrease) error
 }
