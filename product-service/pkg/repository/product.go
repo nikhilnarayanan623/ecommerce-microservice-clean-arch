@@ -215,7 +215,7 @@ func (c *productDatabase) FindProductItemsByProductID(ctx context.Context, produ
 func (c *productDatabase) IsProductItemAlreadyExist(ctx context.Context, productID, variationOptionID uint64) (exist bool, err error) {
 
 	query := `SELECT CASE WHEN id != 0 THEN 'T' ELSE 'F' END AS exist FROM product_items pi 
-	WHERE id = ( SELECT product_item_id FROM product_configurations WHERE variation_option_id = $1 )                        
+	INNER JOIN product_configurations pc  ON pi.id = pc.product_item_id AND pc.variation_option_id = $1 
 	AND pi.product_id = $2`
 	err = c.db.Raw(query, variationOptionID, productID).Scan(&exist).Error
 

@@ -27,9 +27,14 @@ func (c *CartServiceServer) AddToCart(ctx context.Context, req *pb.AddToCartRequ
 
 	if err != nil {
 		utils.LogMessage(utils.Red, "Failed to save cart_item")
-		errCode := codes.Internal
-		if err == usecase.ErrInvalidProductItemID {
+		var errCode codes.Code
+		switch err {
+		case usecase.ErrInvalidProductItemID:
 			errCode = codes.InvalidArgument
+		case usecase.ErrProductItemOutOfStock:
+			errCode = codes.InvalidArgument
+		default:
+			errCode = codes.Internal
 		}
 		return nil, status.Error(errCode, err.Error())
 	}

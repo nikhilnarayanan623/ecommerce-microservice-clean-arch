@@ -180,13 +180,13 @@ func (c *productUseCase) AddProductItem(ctx context.Context, productItems reques
 	productItems.SKU = utils.GenerateSKU()
 
 	var productItemID uint64
-	err = c.repo.Transactions(ctx, func(repo repo.ProductRepository) error {
-		productItemID, err = repo.SaveProductItem(ctx, productItems)
+	err = c.repo.Transactions(ctx, func(trxRepo repo.ProductRepository) error {
+		productItemID, err = trxRepo.SaveProductItem(ctx, productItems)
 		if err != nil {
 			return fmt.Errorf("failed to save product_item \nerror:%w", err)
 		}
 
-		err = c.repo.SaveProductConfiguration(ctx, productItemID, productItems.VariationOptionID)
+		err = trxRepo.SaveProductConfiguration(ctx, productItemID, productItems.VariationOptionID)
 		if err != nil {
 			return fmt.Errorf("failed to save product_item configuration \nerror:%w", err)
 		}
