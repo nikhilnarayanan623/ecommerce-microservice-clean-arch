@@ -98,6 +98,11 @@ func (c *authUsecase) OtpVerify(ctx context.Context, otpDetails utils.OtpVerify)
 		return 0, fmt.Errorf("otp validation time expired")
 	}
 
+	err = c.otpVerify.VerifyOtp(otpSession.Phone, otpDetails.OtpCode)
+	if err != nil {
+		return 0, fmt.Errorf("failed verify otp \nerror:%w", err)
+	}
+
 	err = c.repo.Transactions(func(repo repo.AuthRepository) error {
 
 		err = c.userClient.UpdateUserVerified(ctx, otpSession.UserID)
