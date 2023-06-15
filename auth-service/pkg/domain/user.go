@@ -1,6 +1,6 @@
 package domain
 
-type SaveUserRequest struct {
+type UserSignupRequest struct {
 	FirstName string
 	LastName  string
 	Age       uint64
