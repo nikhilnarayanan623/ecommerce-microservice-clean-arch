@@ -52,7 +52,7 @@ func (c *authServiceServer) UserSignupVerify(ctx context.Context, req *pb.UserSi
 		OtpCode: req.GetOtpCode(),
 	}
 
-	userID, err := c.usecase.OtpVerify(ctx, optRequest)
+	userID, err := c.usecase.SignupVerify(ctx, optRequest)
 
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "%s", err.Error())

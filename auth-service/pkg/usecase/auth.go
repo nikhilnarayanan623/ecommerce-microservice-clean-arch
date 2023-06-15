@@ -85,7 +85,7 @@ func (c *authUsecase) UserSignup(ctx context.Context, user domain.UserSignupRequ
 }
 
 // Verify OTP using otp id and otp
-func (c *authUsecase) OtpVerify(ctx context.Context, otpDetails utils.OtpVerify) (uint64, error) {
+func (c *authUsecase) SignupVerify(ctx context.Context, otpDetails utils.OtpVerify) (uint64, error) {
 
 	otpSession, err := c.repo.FindOtpSession(ctx, otpDetails.OtpID)
 	if err != nil {
@@ -98,9 +98,9 @@ func (c *authUsecase) OtpVerify(ctx context.Context, otpDetails utils.OtpVerify)
 		return 0, fmt.Errorf("otp validation time expired")
 	}
 
-	err = c.otpVerify.VerifyOtp(otpSession.Phone, otpDetails.OtpCode)
+	err = c.otpVerify.VerifyOtp("+91"+otpSession.Phone, otpDetails.OtpCode)
 	if err != nil {
-		return 0, fmt.Errorf("failed verify otp \nerror:%w", err)
+		return 0, fmt.Errorf("failed to verify otp \nerror: %w", err)
 	}
 
 	err = c.repo.Transactions(func(repo repo.AuthRepository) error {
