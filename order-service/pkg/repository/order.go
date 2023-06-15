@@ -6,6 +6,8 @@ import (
 
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/order-service/pkg/domain"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/order-service/pkg/repository/interfaces"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/order-service/pkg/utils/request"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/order-service/pkg/utils/response"
 	"gorm.io/gorm"
 )
 
@@ -64,6 +66,19 @@ func (c *orderDatabase) FindOrderLinesByShopOrderID(ctx context.Context, shopOrd
 
 	query := `SELECT id, product_item_id, shop_order_id, qty, price FROM order_lines WHERE shop_order_id = $1`
 	err = c.db.Raw(query, shopOrderID).Scan(&orderLines).Error
+
+	return
+}
+
+func (c *orderDatabase) FindAllShopOrdersByUserID(ctx context.Context, userID uint64, pagination request.Pagination) (shopOrders []response.ShopOrder, err error) {
+
+	limit := pagination.Count
+	offset := (pagination.PageNumber - 1) * limit
+
+	query := `SELECT id, order_date, order_total_price, discount 
+	FROM shop_orders WHERE user_id = $1
+	LIMIT $2 OFFSET $3`
+	err = c.db.Raw(query, userID, limit, offset).Scan(&shopOrders).Error
 
 	return
 }

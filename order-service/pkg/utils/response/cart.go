@@ -1,5 +1,6 @@
 package response
 
+// Cart Client Response
 type Cart struct {
 	TotalPrice float64 `json:"total_price"`
 	CartItems  []CartItem

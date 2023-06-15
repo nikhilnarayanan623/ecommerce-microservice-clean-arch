@@ -7,7 +7,7 @@ type ShopOrder struct {
 	UserID          uint64    `json:"user_id" gorm:"not null"`
 	OrderDate       time.Time `json:"order_date" gorm:"not null"`
 	OrderTotalPrice float64   `json:"order_total_price" gorm:"not null"`
-	Discount        uint64    `json:"discount" gorm:"not null"`
+	Discount        float64   `json:"discount" gorm:"not null"`
 }
 
 type OrderLine struct {
