@@ -4,9 +4,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/golang/protobuf/ptypes"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/client/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/config"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/pb"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/request"
+	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/response"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -38,4 +41,35 @@ func (c *orderClient) PlaceOrder(ctx context.Context, userID uint64) (shopOrderI
 	}
 
 	return res.GetShopOrderId(), nil
+}
+
+func (c *orderClient) FindAllShopOrders(ctx context.Context, userID uint64, pagination request.Pagination) ([]response.ShopOrder, error) {
+
+	request := &pb.FindAllOrderRequest{
+		UserId:     userID,
+		PageNumber: pagination.PageNumber,
+		Count:      pagination.Count,
+	}
+	res, err := c.client.FindAllOrder(ctx, request)
+
+	if err != nil {
+		return nil, err
+	}
+
+	shopOrders := make([]response.ShopOrder, len(res.GetOrders()))
+
+	for i, order := range res.GetOrders() {
+
+		orderDate, err := ptypes.Timestamp(order.OrderDate)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert time stamp of protobuf to time.Time")
+		}
+
+		shopOrders[i].ID = order.ShopOrderId
+		shopOrders[i].OrderDate = orderDate
+		shopOrders[i].OrderTotalPrice = order.OrderTotalPrice
+		shopOrders[i].Discount = order.Discount
+	}
+
+	return shopOrders, nil
 }

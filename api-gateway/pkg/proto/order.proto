@@ -4,14 +4,35 @@ package pb;
 
 option go_package = "./pkg/pb";
 
+import "google/protobuf/timestamp.proto";
+
 service OrderService{
     rpc PlaceOrder(PlaceOrderRequest) returns (PlaceOrderResponse){};
+    rpc FindAllOrder(FindAllOrderRequest) returns (FindAllOrderResponse){};
 }
 
+// place order
 message PlaceOrderRequest{
     uint64 user_id = 1;
 }
 
 message PlaceOrderResponse{
     uint64 shop_order_id = 1;
+}
+
+// find all order
+message FindAllOrderRequest{
+    uint64 user_id = 1;
+    uint64 page_number = 2;
+    uint64 count = 3;
+}
+
+message FindAllOrderResponse{
+   message Orders{
+    uint64 shop_order_id = 1;
+    google.protobuf.Timestamp order_date = 2;
+    double order_total_price = 3;
+    double discount = 4;
+   }
+   repeated Orders orders = 1;
 }

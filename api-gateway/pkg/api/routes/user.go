@@ -46,4 +46,9 @@ func SetupUserRoutes(user *gin.RouterGroup, authHandler handler.AuthHandler,
 	{
 		profile.GET("/", userHandler.GetProfile)
 	}
+
+	orders := user.Group("/orders")
+	{
+		orders.GET("/", orderHandler.FindAllOrders)
+	}
 }
