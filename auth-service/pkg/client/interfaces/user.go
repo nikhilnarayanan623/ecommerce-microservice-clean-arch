@@ -9,6 +9,6 @@ import (
 type UserClient interface {
 	FindUserByEmail(ctx context.Context, email string) (domain.User, error)
 	FindUserByPhone(ctx context.Context, phone string) (domain.User, error)
-	SaveUser(ctx context.Context, user domain.SaveUserRequest) (userID uint64, err error)
+	SaveUser(ctx context.Context, user domain.UserSignupRequest) (userID uint64, err error)
 	UpdateUserVerified(ctx context.Context, userID uint64) error
 }

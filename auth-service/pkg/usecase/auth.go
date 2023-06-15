@@ -37,7 +37,7 @@ func NewAuthUsecase(repo repo.AuthRepository, userClient client.UserClient,
 }
 
 // Signup for user
-func (c *authUsecase) UserSignup(ctx context.Context, user domain.SaveUserRequest) (otpID string, err error) {
+func (c *authUsecase) UserSignup(ctx context.Context, user domain.UserSignupRequest) (otpID string, err error) {
 
 	existUser, err := c.userClient.FindUserByEmail(ctx, user.Email)
 	if err != nil {

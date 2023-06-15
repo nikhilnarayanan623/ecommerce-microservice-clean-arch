@@ -61,7 +61,7 @@ func (c *userClient) FindUserByPhone(ctx context.Context, phone string) (domain.
 	if err != nil {
 		return domain.User{}, err
 	}
-	
+
 	return domain.User{
 		ID:          res.GetUserId(),
 		FirstName:   res.GetFirstName(),
@@ -75,7 +75,7 @@ func (c *userClient) FindUserByPhone(ctx context.Context, phone string) (domain.
 	}, nil
 }
 
-func (c *userClient) SaveUser(ctx context.Context, user domain.SaveUserRequest) (userID uint64, err error) {
+func (c *userClient) SaveUser(ctx context.Context, user domain.UserSignupRequest) (userID uint64, err error) {
 	res, err := c.client.SaveUser(ctx, &pb.SaveUserRequest{
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
