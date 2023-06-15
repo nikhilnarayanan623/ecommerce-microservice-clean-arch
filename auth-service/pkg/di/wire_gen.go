@@ -30,7 +30,7 @@ func InitializeServices(cfg *config.Config) (*api.ServiceServer, error) {
 	if err != nil {
 		return nil, err
 	}
-	otpVerification := otp.NewTwiloOtpAuth(cfg)
+	otpVerification := otp.NewTwilioOtpAuth(cfg)
 	tokenAuth := token.NewJWTAuth(cfg)
 	authUseCase := usecase.NewAuthUsecase(authRepository, userClient, otpVerification, tokenAuth)
 	authServiceServer := service.NewAuthServiceServer(authUseCase)

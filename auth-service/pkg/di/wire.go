@@ -21,7 +21,7 @@ func InitializeServices(cfg *config.Config) (*api.ServiceServer, error) {
 	wire.Build(
 		db.ConnectDatabase,
 		repository.NewAuthRepository,
-		otp.NewTwiloOtpAuth,
+		otp.NewTwilioOtpAuth,
 		token.NewJWTAuth,
 		client.NewUserClient, usecase.NewAuthUsecase,
 		service.NewAuthServiceServer,

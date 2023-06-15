@@ -1,33 +1,37 @@
 package otp
 
 import (
+	"fmt"
+
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/auth-service/pkg/config"
 	"github.com/twilio/twilio-go"
 	twilioApi "github.com/twilio/twilio-go/rest/verify/v2"
 )
 
 type twilioOtp struct {
-	serviceID  string
-	authToken  string
-	accountSID string
+	serviceID string
+	client    twilio.RestClient
 }
 
-func NewTwiloOtpAuth(cfg *config.Config) OtpVerification {
+func NewTwilioOtpAuth(cfg *config.Config) OtpVerification {
+	client := *twilio.NewRestClientWithParams(twilio.ClientParams{
+		Username: cfg.TwilioAccountSID,
+		Password: cfg.TwilioAuthToken,
+	})
+
 	return &twilioOtp{
-		serviceID:  cfg.TwilioServiceID,
-		authToken:  cfg.TwilioAuthToken,
-		accountSID: cfg.TwilioAccountSID,
+		serviceID: cfg.TwilioServiceID,
+		client:    client,
 	}
 }
 
 func (c *twilioOtp) SentOtp(phoneNumber string) (string, error) {
 
-	client := c.getNewTwiloClient()
 	params := &twilioApi.CreateVerificationParams{}
 	params.SetTo(phoneNumber)
 	params.SetChannel("sms")
 
-	resp, err := client.VerifyV2.CreateVerification(c.serviceID, params)
+	resp, err := c.client.VerifyV2.CreateVerification(c.serviceID, params)
 	if err != nil {
 		return "", err
 	}
@@ -37,26 +41,20 @@ func (c *twilioOtp) SentOtp(phoneNumber string) (string, error) {
 
 func (c *twilioOtp) VerifyOtp(phoneNumber string, code string) error {
 
-	client := c.getNewTwiloClient()
+	fmt.Println("opt verify ", phoneNumber, code)
 
 	params := &twilioApi.CreateVerificationCheckParams{}
 	params.SetTo(phoneNumber)
 	params.SetCode(code)
 
-	resp, err := client.VerifyV2.CreateVerificationCheck(c.serviceID, params)
+	resp, err := c.client.VerifyV2.CreateVerificationCheck(c.serviceID, params)
+
 	if err != nil {
 		return err
-	} else if *resp.Status == "approved" {
-		return nil
+	}
+	if resp != nil && *resp.Status != "approved" {
+		return fmt.Errorf("invalid otp code")
 	}
 
 	return nil
-}
-
-func (c *twilioOtp) getNewTwiloClient() twilio.RestClient {
-
-	return *twilio.NewRestClientWithParams(twilio.ClientParams{
-		Username: c.accountSID,
-		Password: c.authToken,
-	})
 }

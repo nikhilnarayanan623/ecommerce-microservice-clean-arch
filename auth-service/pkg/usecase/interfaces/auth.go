@@ -10,7 +10,7 @@ import (
 
 type AuthUseCase interface {
 	UserSignup(ctx context.Context, user domain.UserSignupRequest) (otpID string, err error)
-	OtpVerify(ctx context.Context, otpDetails utils.OtpVerify) (userID uint64, err error)
+	SignupVerify(ctx context.Context, otpDetails utils.OtpVerify) (userID uint64, err error)
 
 	UserLogin(ctx context.Context, loginDetail domain.UserLoginRequest) (userID uint64, err error)
 
