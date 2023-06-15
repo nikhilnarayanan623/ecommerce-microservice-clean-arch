@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	OrderService_PlaceOrder_FullMethodName = "/pb.OrderService/PlaceOrder"
+	OrderService_PlaceOrder_FullMethodName   = "/pb.OrderService/PlaceOrder"
+	OrderService_FindAllOrder_FullMethodName = "/pb.OrderService/FindAllOrder"
 )
 
 // OrderServiceClient is the client API for OrderService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrderServiceClient interface {
 	PlaceOrder(ctx context.Context, in *PlaceOrderRequest, opts ...grpc.CallOption) (*PlaceOrderResponse, error)
+	FindAllOrder(ctx context.Context, in *FindAllOrderRequest, opts ...grpc.CallOption) (*FindAllOrderResponse, error)
 }
 
 type orderServiceClient struct {
@@ -46,11 +48,21 @@ func (c *orderServiceClient) PlaceOrder(ctx context.Context, in *PlaceOrderReque
 	return out, nil
 }
 
+func (c *orderServiceClient) FindAllOrder(ctx context.Context, in *FindAllOrderRequest, opts ...grpc.CallOption) (*FindAllOrderResponse, error) {
+	out := new(FindAllOrderResponse)
+	err := c.cc.Invoke(ctx, OrderService_FindAllOrder_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderServiceServer is the server API for OrderService service.
 // All implementations must embed UnimplementedOrderServiceServer
 // for forward compatibility
 type OrderServiceServer interface {
 	PlaceOrder(context.Context, *PlaceOrderRequest) (*PlaceOrderResponse, error)
+	FindAllOrder(context.Context, *FindAllOrderRequest) (*FindAllOrderResponse, error)
 	mustEmbedUnimplementedOrderServiceServer()
 }
 
@@ -60,6 +72,9 @@ type UnimplementedOrderServiceServer struct {
 
 func (UnimplementedOrderServiceServer) PlaceOrder(context.Context, *PlaceOrderRequest) (*PlaceOrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PlaceOrder not implemented")
+}
+func (UnimplementedOrderServiceServer) FindAllOrder(context.Context, *FindAllOrderRequest) (*FindAllOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindAllOrder not implemented")
 }
 func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
 
@@ -92,6 +107,24 @@ func _OrderService_PlaceOrder_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_FindAllOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindAllOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).FindAllOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_FindAllOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).FindAllOrder(ctx, req.(*FindAllOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +135,10 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PlaceOrder",
 			Handler:    _OrderService_PlaceOrder_Handler,
+		},
+		{
+			MethodName: "FindAllOrder",
+			Handler:    _OrderService_FindAllOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

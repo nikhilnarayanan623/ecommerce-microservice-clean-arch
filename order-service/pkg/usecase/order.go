@@ -112,6 +112,9 @@ func (c *orderUseCase) isCartIsValidForOrder(cart response.Cart) (valid bool) {
 	return true
 }
 
-func (c *orderUseCase) FindShopOrders(ctx context.Context, userID uint64) {
+func (c *orderUseCase) FindAllShopOrders(ctx context.Context, userID uint64, pagination request.Pagination) ([]response.ShopOrder, error) {
 
+	shopOrders, err := c.repo.FindAllShopOrdersByUserID(ctx, userID, pagination)
+
+	return shopOrders, err
 }
