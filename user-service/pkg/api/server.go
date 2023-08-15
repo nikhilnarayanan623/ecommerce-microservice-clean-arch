@@ -10,13 +10,14 @@ import (
 )
 
 type ServiceServer struct {
-	gs  *grpc.Server
-	lis net.Listener
+	gs   *grpc.Server
+	lis  net.Listener
+	port string
 }
 
 func NewServerGRPC(cfg *config.Config, server pb.UserServiceServer) (*ServiceServer, error) {
 
-	lis, err := net.Listen("tcp", cfg.ServiceUrl)
+	lis, err := net.Listen("tcp", cfg.ServicePort)
 	if err != nil {
 		return nil, err
 	}
@@ -25,12 +26,13 @@ func NewServerGRPC(cfg *config.Config, server pb.UserServiceServer) (*ServiceSer
 	pb.RegisterUserServiceServer(gs, server)
 
 	return &ServiceServer{
-		gs:  gs,
-		lis: lis,
+		gs:   gs,
+		lis:  lis,
+		port: cfg.ServicePort,
 	}, nil
 }
 
 func (c *ServiceServer) Start() error {
-	fmt.Println("User service listening....")
+	fmt.Println("User service listening On ", c.port)
 	return c.gs.Serve(c.lis)
 }

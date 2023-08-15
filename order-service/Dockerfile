@@ -1,9 +1,20 @@
 FROM golang:1.20.4-alpine3.18 AS build-stage
-WORKDIR /home/app
-COPY ./ /home/app/
-RUN cd /home/app && go mod tidy
-RUN go build -o ./api ./cmd
 
+WORKDIR /app
+# download dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+# copy source file
+COPY cmd cmd/
+COPY pkg pkg/
+# build executable files
+RUN go build -v -o build/api  cmd/api/main.go
+
+# final stage
 FROM gcr.io/distroless/static-debian11
-COPY --from=build-stage /home/app/api /api
-CMD [ "/api" ]
+
+WORKDIR /app
+# copy build file
+COPY --from=build-stage /app/build/api api
+
+CMD [ "/app/api" ]

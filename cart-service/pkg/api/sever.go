@@ -10,8 +10,9 @@ import (
 )
 
 type Server struct {
-	gs  *grpc.Server
-	lis net.Listener
+	gs   *grpc.Server
+	lis  net.Listener
+	port string
 }
 
 func NewServerGRPC(cfg *config.Config, cartServiceServer pb.CartServiceServer) (*Server, error) {
@@ -19,18 +20,19 @@ func NewServerGRPC(cfg *config.Config, cartServiceServer pb.CartServiceServer) (
 	gs := grpc.NewServer()
 	pb.RegisterCartServiceServer(gs, cartServiceServer)
 
-	lis, err := net.Listen("tcp", cfg.ServiceUrl)
+	lis, err := net.Listen("tcp", cfg.ServicePort)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Server{
-		gs:  gs,
-		lis: lis,
+		gs:   gs,
+		lis:  lis,
+		port: cfg.ServicePort,
 	}, nil
 }
 
 func (c *Server) Start() error {
-	fmt.Println("Cart Service Listening...")
+	fmt.Println("Cart Service Listening on ", c.port)
 	return c.gs.Serve(c.lis)
 }

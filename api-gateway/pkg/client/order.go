@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/golang/protobuf/ptypes"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/client/interfaces"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/config"
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/pb"
@@ -12,6 +11,7 @@ import (
 	"github.com/nikhilnarayanan623/ecommerce-microservice-clean-arch/api-gateway/pkg/utils/response"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type orderClient struct {
@@ -59,14 +59,9 @@ func (c *orderClient) FindAllShopOrders(ctx context.Context, userID uint64, pagi
 	shopOrders := make([]response.ShopOrder, len(res.GetOrders()))
 
 	for i, order := range res.GetOrders() {
-
-		orderDate, err := ptypes.Timestamp(order.OrderDate)
-		if err != nil {
-			return nil, fmt.Errorf("failed to convert time stamp of protobuf to time.Time")
-		}
-
+		ts := timestamppb.New(order.OrderDate.AsTime())
 		shopOrders[i].ID = order.ShopOrderId
-		shopOrders[i].OrderDate = orderDate
+		shopOrders[i].OrderDate = ts.AsTime()
 		shopOrders[i].OrderTotalPrice = order.OrderTotalPrice
 		shopOrders[i].Discount = order.Discount
 	}
