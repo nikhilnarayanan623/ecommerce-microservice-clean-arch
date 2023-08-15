@@ -1,0 +1,173 @@
+version: '3.8'
+services:
+  # api gateway container
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    image: nikhil382/ecommerce-microservice-clean-arch-api-gateway
+    ports:
+      - ${PORT}${PORT}
+    env_file:
+      - .env
+    networks:
+      - ecommerce-micro
+    restart: always
+
+  # auth db container
+  auth-db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${AUTH_DB_USER}
+      - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}
+      - POSTGRES_DB=${AUTH_DB_NAME}
+    networks:
+      - ecommerce-micro
+    volumes:
+      - auth-database:/var/lib/postgresql/data
+    restart: always
+
+  # auth service container
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    image: nikhil382/ecommerce-microservice-clean-arch-auth-service
+    env_file:
+      - .env
+    environment:
+      - AUTH_DB_HOST=auth-db
+    networks:
+      - ecommerce-micro
+    restart: always
+    depends_on:
+      - auth-db
+
+  # user database
+  user-db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${USER_DB_USER}
+      - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
+      - POSTGRES_DB=${USER_DB_NAME}
+    networks:
+      - ecommerce-micro
+    volumes:
+      - user-database:/var/lib/postgresql/data
+    restart: always
+
+  # user service container
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    image: nikhil382/ecommerce-microservice-clean-arch-user-service
+    env_file:
+      - .env
+    environment:
+      - USER_DB_HOST=user-db
+    networks:
+      - ecommerce-micro
+    restart: always
+    depends_on:
+      -  user-db
+  
+  # product database
+  product-db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${PRODUCT_DB_USER}
+      - POSTGRES_PASSWORD=${PRODUCT_DB_PASSWORD}
+      - POSTGRES_DB=${PRODUCT_DB_NAME}
+    volumes:
+      - product-database:/var/lib/postgresql/data
+    networks:
+      - ecommerce-micro
+    restart: always
+
+  # product service
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    image: nikhil382/ecommerce-microservice-clean-arch-product-service
+    env_file:
+      - .env
+    environment:
+      - PRODUCT_DB_HOST=product-db
+    restart: always
+    networks:
+      - ecommerce-micro
+    depends_on:
+      - product-db
+
+  # cart database
+  cart-db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${CART_DB_USER}
+      - POSTGRES_PASSWORD=${CART_DB_PASSWORD}
+      - POSTGRES_DB=${CART_DB_NAME}
+    volumes:
+      - cart-database:/var/lib/postgresql/data
+    networks:
+      - ecommerce-micro
+    restart: always
+
+  # cart service
+  cart-service:
+    build:
+      context: ./cart-service
+      dockerfile: Dockerfile
+    image: nikhil382/ecommerce-microservice-clean-arch-cart-service
+    env_file:
+      - .env
+    depends_on:
+      - cart-db
+    networks:
+      - ecommerce-micro
+    restart: always
+
+    # order database
+  order-db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${ORDER_DB_USER}
+      - POSTGRES_PASSWORD=${ORDER_DB_PASSWORD}
+      - POSTGRES_DB=${ORDER_DB_NAME}
+    volumes:
+      - order-databse:/var/lib/postgresql/data
+    networks:
+      - ecommerce-micro
+    restart: always
+
+  # order service
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    image: nikhil382/ecommerce-microservice-clean-arch-order-service
+    env_file:
+      - .env
+    depends_on:
+      - order-db
+    networks:
+      - ecommerce-micro
+    restart: always
+
+volumes:
+  auth-database:
+    driver: local
+  user-database:
+    driver: local
+  product-database:
+    driver: local
+  cart-database:
+    driver: local
+  order-databse:
+    driver: local
+
+networks:
+  ecommerce-micro:
+    driver: bridge
+

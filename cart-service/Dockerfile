@@ -1,15 +1,12 @@
-# build stage
 FROM golang:1.20.4-alpine3.18 AS build-stage
 
 WORKDIR /app
-# donwload dependencies
+# download dependencies
 COPY go.mod go.sum ./
 RUN go mod download
-
-# copy source codes
+# copy source file
 COPY cmd cmd/
 COPY pkg pkg/
-
 # build executable file
 RUN go build -v -o build/api cmd/api/main.go
 
@@ -17,6 +14,7 @@ RUN go build -v -o build/api cmd/api/main.go
 FROM gcr.io/distroless/static-debian11
 
 WORKDIR /app
-# copy from file from build stage
+# copy build file
 COPY --from=build-stage /app/build/api api
+
 CMD ["/app/api"]

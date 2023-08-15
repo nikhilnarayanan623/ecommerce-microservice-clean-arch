@@ -3,18 +3,18 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	ServiceUrl string `mapstructure:"SERVICE_URL"`
+	ServicePort string `mapstructure:"PRODUCT_SERVICE_PORT"`
 
-	DBHost     string `mapstructure:"DB_HOST"`
-	DBPort     string `mapstructure:"DB_PORT"`
-	DBName     string `mapstructure:"DB_NAME"`
-	DBUser     string `mapstructure:"DB_USER"`
-	DBPassword string `mapstructure:"DB_PASSWORD"`
+	DBHost     string `mapstructure:"PRODUCT_DB_HOST"`
+	DBPort     string `mapstructure:"PRODUCT_DB_PORT"`
+	DBName     string `mapstructure:"PRODUCT_DB_NAME"`
+	DBUser     string `mapstructure:"PRODUCT_DB_USER"`
+	DBPassword string `mapstructure:"PRODUCT_DB_PASSWORD"`
 }
 
 var envs = []string{
-	"SERVICE_URL",
-	"DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PASSWORD",
+	"PRODUCT_SERVICE_PORT",
+	"PRODUCT_DB_HOST", "PRODUCT_DB_PORT", "PRODUCT_DB_NAME", "PRODUCT_DB_USER", "PRODUCT_DB_PASSWORD",
 }
 
 func LoadConfig() (config *Config, err error) {
